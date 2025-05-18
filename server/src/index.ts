@@ -4,9 +4,6 @@ dotenv.config()
 import path from 'path'
 const clientBuildPath = path.join(process.cwd(), 'client', 'dist')
 
-import { Stripe } from 'stripe'
-export const stripe = new Stripe(process.env.STRIPE_SECRET!)
-
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
 import express from 'express'

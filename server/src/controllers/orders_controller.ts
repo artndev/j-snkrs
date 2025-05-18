@@ -1,7 +1,11 @@
-import { Request, Response } from 'express'
-import config from '../config.json' with { type: 'json' }
-import { stripe } from '../index.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
+import { Request, Response } from 'express'
+import { Stripe } from 'stripe'
+import config from '../config.json' with { type: 'json' }
+
+const stripe = new Stripe(process.env.STRIPE_SECRET!)
 export default {
   createCheckoutSession: async (req: Request, res: Response) => {
     try {
