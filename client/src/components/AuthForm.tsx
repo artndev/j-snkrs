@@ -1,6 +1,6 @@
 import React from 'react'
-import '../styles/css/AuthForm.css'
 import config from '../config.json'
+import '../styles/css/AuthForm.css'
 
 const AuthForm: React.FC<IAuthFormProps> = ({
   formTitle,

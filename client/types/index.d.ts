@@ -1,6 +1,5 @@
-import { AxiosResponse } from 'axios'
-
 export {}
+import { AxiosResponse } from 'axios'
 
 declare global {
   export interface IUser {
@@ -18,13 +17,13 @@ declare global {
     setAuth: (auth: IUser | undefined) => void | undefined
   }
 
+  export type IAxiosErrorResponse = AxiosResponse | undefined
+
   export interface IAuthFormProps {
     formTitle: string
     onSubmit: (...args) => void
-    err: IAxiosError
+    err: IAxiosErrorResponse
     withEmail?: boolean
     withSocials?: boolean
   }
-
-  export type IAxiosErrorResponse = AxiosResponse | undefined
 }
