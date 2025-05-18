@@ -1,5 +1,5 @@
 {
   "SERVER_PORT": 8000,
-  "CLIENT_URL": "https://sneakers-store.vercel.app",
-  "SERVER_URL": "https://sneakers-store.vercel.app"
+  "CLIENT_URL": "https://art-sneakers-store.vercel.app",
+  "SERVER_URL": "https://art-sneakers-store.vercel.app"
 }
