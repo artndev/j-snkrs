@@ -141,10 +141,10 @@ export default {
         [id]
       )
 
-      if (!rows.length) throw new Error('User with this id is not found')
+      if (!rows.length) throw new Error('Entry with this id is not found')
 
       return {
-        message: 'You have successfully found user with this id',
+        message: 'You have successfully found entry with this id',
         answer: rows[0],
       }
     } catch (err) {

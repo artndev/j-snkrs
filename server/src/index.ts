@@ -86,6 +86,8 @@ const isNotAuthenticated = (
   next()
 }
 
+app.use('/api/products', routers.productRouter)
+
 app.use('/api/local', isNotAuthenticated, routers.localRouter)
 app.use('/api/google', routers.googleRouter)
 app.use('/api/github', routers.githubRouter)

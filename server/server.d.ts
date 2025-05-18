@@ -2,10 +2,12 @@ export {}
 import { ResultSetHeader } from 'mysql2'
 
 declare global {
-  export interface ICredentials {
-    username: string
-    password: string
-    email: string
+  export interface IProduct extends ResultSetHeader {
+    Id?: number
+    Name: string
+    Price: number
+    Currency: string
+    Updated: string
   }
 
   export interface IUser extends ResultSetHeader {
@@ -20,5 +22,11 @@ declare global {
 
   namespace Express {
     interface User extends IUser {}
+  }
+
+  export interface ICredentials {
+    username: string
+    password: string
+    email: string
   }
 }

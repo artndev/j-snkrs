@@ -14,9 +14,9 @@ P.S.: Deployed on Vercel.
 <img src="./assets/sass.svg" width=50 />
 
 <img src="./assets/react.svg" width=50 />&nbsp;&nbsp;&nbsp;
+<img src="./assets/tailwind.svg" width=50 />&nbsp;&nbsp;&nbsp;
 <img src="./assets/express.svg" width=50 />
 <img src="./assets/axios.svg" width=50 />&nbsp;
 <img src="./assets/redis.svg" width=50 />&nbsp;&nbsp;&nbsp;
 <img src="./assets/mysql.svg" width=50 />&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="./assets/passport.png" width=50 />&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./assets/vercel.svg" width=50 />
