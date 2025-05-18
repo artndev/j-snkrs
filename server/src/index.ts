@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import path from 'path'
-const clientBuildPath = path.join(process.cwd(), '../', 'client', 'dist')
+const clientBuildPath = path.join(process.cwd(), 'client', 'dist')
 
 import { Stripe } from 'stripe'
 export const stripe = new Stripe(process.env.STRIPE_SECRET!)
@@ -45,7 +45,7 @@ app.use(
       maxAge: 3600000, // 1h
       path: '/',
       httpOnly: true,
-      secure: false, // true
+      secure: true, // false
       sameSite: 'strict',
     },
   })
