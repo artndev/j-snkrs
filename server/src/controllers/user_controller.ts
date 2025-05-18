@@ -134,23 +134,23 @@ export default {
       throw new Error('Server is not responding')
     }
   },
-  FindById: async (id: number) => {
-    try {
-      const [rows] = await pool.query<IUser[]>(
-        'SELECT * FROM Users WHERE Id = ?;',
-        [id]
-      )
+  // FindById: async (id: number) => {
+  //   try {
+  //     const [rows] = await pool.query<IUser[]>(
+  //       'SELECT * FROM Users WHERE Id = ?;',
+  //       [id]
+  //     )
 
-      if (!rows.length) throw new Error('Entry with this id is not found')
+  //     if (!rows.length) throw new Error('Entry with this id is not found')
 
-      return {
-        message: 'You have successfully found entry with this id',
-        answer: rows[0],
-      }
-    } catch (err) {
-      console.log(err)
+  //     return {
+  //       message: 'You have successfully found entry with this id',
+  //       answer: rows[0],
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
 
-      throw new Error('Server is not responding')
-    }
-  },
+  //     throw new Error('Server is not responding')
+  //   }
+  // },
 }
