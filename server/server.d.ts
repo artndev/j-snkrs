@@ -10,6 +10,10 @@ declare global {
     Updated: string
   }
 
+  export interface IProductCheckout extends IProduct {
+    Quantity: number
+  }
+
   export interface IUser extends ResultSetHeader {
     Id?: number
     Username: string

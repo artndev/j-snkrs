@@ -1,6 +1,7 @@
 import githubRouter from './github_router.js'
 import googleRouter from './google_router.js'
 import localRouter from './local_router.js'
-import productRouter from './product_router.js'
+import ordersRouter from './orders_router.js'
+import productsRouter from './products_router.js'
 
-export { githubRouter, googleRouter, localRouter, productRouter }
+export { githubRouter, googleRouter, localRouter, ordersRouter, productsRouter }

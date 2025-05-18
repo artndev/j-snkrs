@@ -34,8 +34,8 @@ export default {
   Create: async (req: Request, res: Response) => {
     try {
       await pool.query<ResultSetHeader>(
-        'INSERT INTO Products (Name, Price) VALUES (?, ?);',
-        [req.body.name, req.body.price]
+        'INSERT INTO Products (Name, Price, Currency) VALUES (?, ?, ?);',
+        [req.body.name, req.body.price, req.body.currency]
       )
 
       res.status(200).json({

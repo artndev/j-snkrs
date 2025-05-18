@@ -4,14 +4,17 @@ dotenv.config()
 import path from 'path'
 const clientBuildPath = path.join(process.cwd(), '../', 'client', 'dist')
 
+import { Stripe } from 'stripe'
+export const stripe = new Stripe(process.env.STRIPE_SECRET!)
+
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
-import express, { NextFunction, Request, Response } from 'express'
+import express from 'express'
 import session from 'express-session'
 import passport from 'passport'
 import { createClient } from 'redis'
 import config from './config.json' with { type: 'json' }
-import { userController } from './controllers/_controllers.js'
+import * as middlewares from './middlewares.js'
 import * as routers from './routers/_routers.js'
 import './strategies/_strategies.js'
 
@@ -58,48 +61,21 @@ passport.deserializeUser((user: Express.User, done) => {
   return done(null, user)
 })
 
-const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.isAuthenticated()) {
-    res.status(401).json({
-      message: 'You have not authorized yet',
-      answer: null,
-    })
-    return
-  }
+app.use('/api/products', routers.productsRouter)
+app.use('/api/orders', routers.ordersRouter)
 
-  next()
-}
-
-const isNotAuthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    res.status(401).json({
-      message: 'You have already authorized',
-      answer: null,
-    })
-    return
-  }
-
-  next()
-}
-
-app.use('/api/products', routers.productRouter)
-
-app.use('/api/local', isNotAuthenticated, routers.localRouter)
+app.use('/api/local', middlewares.isNotAuthenticated, routers.localRouter)
 app.use('/api/google', routers.googleRouter)
 app.use('/api/github', routers.githubRouter)
 
-app.get('/api/auth/status', isAuthenticated, (req, res) => {
+app.get('/api/auth/status', middlewares.isAuthenticated, (req, res) => {
   res.status(200).json({
     message: 'You are authorized',
     answer: req.user,
   })
 })
 
-app.post('/api/auth/logout', isAuthenticated, (req, res) => {
+app.post('/api/auth/logout', middlewares.isAuthenticated, (req, res) => {
   req.logout(err => {
     if (err) {
       res.status(500).json({

@@ -4,7 +4,7 @@ dotenv.config()
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import config from '../config.json' with { type: 'json' }
-import { userController } from '../controllers/_controllers.js'
+import { usersController } from '../controllers/_controllers.js'
 
 export default [
   passport.use(
@@ -17,7 +17,7 @@ export default [
         passReqToCallback: true,
       },
       async (req, _accessToken, _refreshToken, profile, done) => {
-        return await userController
+        return await usersController
           .AttachGoogleId({
             id: req.query?.state as string | undefined,
             googleId: profile.id,

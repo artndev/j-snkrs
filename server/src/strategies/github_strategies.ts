@@ -6,7 +6,7 @@ import passport from 'passport'
 import { Strategy as GithubStrategy, Profile } from 'passport-github2'
 import { VerifyCallback } from 'passport-google-oauth20'
 import config from '../config.json' with { type: 'json' }
-import { userController } from '../controllers/_controllers.js'
+import { usersController } from '../controllers/_controllers.js'
 
 export default [
   passport.use(
@@ -25,7 +25,7 @@ export default [
         profile: Profile,
         done: VerifyCallback
       ) => {
-        return await userController
+        return await usersController
           .AttachGithubId({
             id: req.query?.state as string | undefined,
             githubId: profile.id,

@@ -1,6 +1,6 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { userController } from '../controllers/_controllers.js'
+import { usersController } from '../controllers/_controllers.js'
 
 export default [
   passport.use(
@@ -11,7 +11,7 @@ export default [
         passwordField: 'password',
       },
       async (username, password, done) => {
-        return await userController
+        return await usersController
           .Login({
             username: username,
             password: password,
@@ -34,7 +34,7 @@ export default [
         passReqToCallback: true,
       },
       async (req, username, password, done) => {
-        return await userController
+        return await usersController
           .Register({
             username: username,
             password: password,
