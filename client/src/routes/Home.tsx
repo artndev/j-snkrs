@@ -27,9 +27,6 @@ const Home = () => {
 
   return (
     <>
-      <Button size={'sm'} style={{ minWidth: 200 }}>
-        Test
-      </Button>
       <div className="home__container">
         <div className="home__subcontainer">
           {!auth ? (

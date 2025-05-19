@@ -1,26 +1,21 @@
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  align-items: center;
+.password__input-btn {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  left: 95%;
+  top: 50%;
+  transform: translate(-95%, -50%);
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+  filter: brightness(0) saturate(100%) invert(40%) sepia(31%) saturate(0%) hue-rotate(244deg) brightness(106%) contrast(98%);
+  opacity: 0.85;
 }
-form #title {
-  align-self: flex-start;
+.password__input-btn.opened {
+  background-image: url("../../imgs/eye.svg");
 }
-form input {
-  padding: 10px;
-}
-form button {
-  width: 50%;
-  padding: 8px;
-}
-form .form__group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: inherit;
-}
-form .form__group button {
-  width: 100%;
+.password__input-btn.closed {
+  background-image: url("../../imgs/eye-closed.svg");
 }

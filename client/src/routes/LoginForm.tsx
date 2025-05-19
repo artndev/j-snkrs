@@ -4,6 +4,7 @@ import axios from '../axios'
 import AuthForm from '../components/AuthForm'
 import { useAuthContext } from '../contexts/Auth'
 import '../styles/css/LoginForm.css'
+import AppAuthForm from '@/components/AppAuthForm'
 
 const LoginForm = () => {
   const { setAuth } = useAuthContext()
@@ -39,14 +40,18 @@ const LoginForm = () => {
 
   return (
     <div className="login__form-container">
-      <div className="login__form-subcontainer">
-        <AuthForm
+      <AppAuthForm
+        formTitle="Log in"
+        onSubmit={onSubmit}
+        err={err}
+        withSocials
+      />
+      {/* <AuthForm
           formTitle="Log in"
           onSubmit={onSubmit}
           err={err}
           withSocials
-        />
-      </div>
+        /> */}
     </div>
   )
 }
