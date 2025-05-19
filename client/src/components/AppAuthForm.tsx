@@ -11,6 +11,10 @@ import {
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
+import config from '../config.json'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({
   formTitle,
@@ -41,46 +45,39 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
           render={({ field }) => (
             <FormItem className="w-[100%]">
               <FormLabel>Username</FormLabel>
-              <FormDescription>Validation info</FormDescription>
+              <FormDescription>
+                Cannot be started with a digit. Must contain 5 to 20 characters
+                without spaces: <em>a-z/0-9/_</em>
+              </FormDescription>
               <FormControl>
-                <Input placeholder="Enter your username.." {...field} />
+                <Input
+                  //pattern="^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$"
+                  placeholder="Enter your username.."
+                  required
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {withEmail && (
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem className="w-[100%]">
-                <FormLabel>Email</FormLabel>
-                <FormDescription>Validation info</FormDescription>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email.."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem className="w-[100%]">
               <FormLabel>Password</FormLabel>
-              <FormDescription>Validation info</FormDescription>
+              <FormDescription>
+                Must contain 5 to 20 characters without spaces:{' '}
+                <em>'a-z', 'A-Z', '0-9' and './_/!/@/#/$/%/^/&/*'</em>
+              </FormDescription>
               <div className="relative">
                 <FormControl>
                   <Input
                     type={inputType}
+                    //pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_.!@#$%^&*])[a-zA-Z0-9_.!@#$%^&*]{5,20}$"
                     placeholder="Enter your password.."
+                    required
                     {...field}
                   />
                 </FormControl>
@@ -107,6 +104,52 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
             </FormItem>
           )}
         />
+        {withEmail && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="w-[100%]">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email.."
+                    required
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {withSocials && (
+          <>
+            <span className="self-center">Or</span>
+            <div className="flex items-center gap-[10px]">
+              <a
+                className="flex-1"
+                href={`${config.SERVER_URL}/api/google/login`}
+              >
+                <Button className="w-[100%]" type="button" variant={'outline'}>
+                  <FontAwesomeIcon icon={faGoogle} />
+                  Google
+                </Button>
+              </a>
+              /
+              <a
+                className="flex-1"
+                href={`${config.SERVER_URL}/api/github/login`}
+              >
+                <Button className="w-[100%]" type="button" variant={'outline'}>
+                  <FontAwesomeIcon icon={faGithub} />
+                  Github
+                </Button>
+              </a>
+            </div>
+          </>
+        )}
         <Button className="w-[50%] self-center mt-[10px]" type="submit">
           Submit
         </Button>

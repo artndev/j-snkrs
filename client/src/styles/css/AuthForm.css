@@ -12,6 +12,7 @@
   border: none;
   filter: brightness(0) saturate(100%) invert(40%) sepia(31%) saturate(0%) hue-rotate(244deg) brightness(106%) contrast(98%);
   opacity: 0.85;
+  outline: none;
 }
 .password__input-btn.opened {
   background-image: url("../../imgs/eye.svg");

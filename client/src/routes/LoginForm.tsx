@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../axios'
-import AuthForm from '../components/AuthForm'
 import { useAuthContext } from '../contexts/Auth'
-import '../styles/css/LoginForm.css'
 import AppAuthForm from '@/components/AppAuthForm'
 
 const LoginForm = () => {
@@ -11,14 +9,8 @@ const LoginForm = () => {
   const navigator = useNavigate()
   const [err, setErr] = useState<IAxiosErrorResponse>(undefined)
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (data: IAuthFormData) => {
     try {
-      e.preventDefault()
-
-      const formData = new FormData(e.currentTarget)
-      let data: Record<string, FormDataEntryValue> = {}
-      formData.forEach((val, key) => (data[key] = val))
-
       axios
         .post('/api/local/login', data)
         .then(res => {
@@ -39,19 +31,19 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="login__form-container">
+    <div className="flex flex-col justify-center items-center gap-[10px] h-[100%] p-[20px] select-none">
       <AppAuthForm
         formTitle="Log in"
         onSubmit={onSubmit}
         err={err}
         withSocials
       />
-      {/* <AuthForm
-          formTitle="Log in"
-          onSubmit={onSubmit}
-          err={err}
-          withSocials
-        /> */}
+      <Link
+        className="text-muted-foreground text-sm hover:underline"
+        to={'/register'}
+      >
+        I want to register
+      </Link>
     </div>
   )
 }

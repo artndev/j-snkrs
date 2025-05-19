@@ -17,6 +17,12 @@ declare global {
     setAuth: (auth: IUser | undefined) => void | undefined
   }
 
+  export interface IAuthFormData {
+    username: string
+    password: string
+    email?: string
+  }
+
   export type IAxiosErrorResponse = AxiosResponse | undefined
 
   export interface IAuthFormProps {

@@ -1,25 +1,19 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../axios'
-import AuthForm from '../components/AuthForm'
 import { useAuthContext } from '../contexts/Auth'
-import '../styles/css/RegisterForm.css'
+import '../styles/css/AuthForm.css'
+import AppAuthForm from '@/components/AppAuthForm'
 
 const RegisterForm = () => {
   const { setAuth } = useAuthContext()
   const navigator = useNavigate()
   const [err, setErr] = useState<IAxiosErrorResponse>(undefined)
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (data: IAuthFormData) => {
     try {
-      e.preventDefault()
-
-      const formData = new FormData(e.currentTarget)
-      let data: Record<string, FormDataEntryValue> = {}
-      formData.forEach((val, key) => (data[key] = val))
-
       axios
-        .post('/api/local/register', data)
+        .post('/api/local/login', data)
         .then(res => {
           setAuth(res.data.answer)
         })
@@ -38,15 +32,19 @@ const RegisterForm = () => {
   }
 
   return (
-    <div className="register__form-container">
-      <div className="register__form-subcontainer">
-        <AuthForm
-          formTitle="Register"
-          onSubmit={onSubmit}
-          err={err}
-          withEmail
-        />
-      </div>
+    <div className="flex flex-col justify-center items-center gap-[10px] h-[100%] p-[20px] select-none">
+      <AppAuthForm
+        formTitle="Register"
+        onSubmit={onSubmit}
+        err={err}
+        withEmail
+      />
+      <Link
+        className="text-muted-foreground text-sm hover:underline"
+        to={'/login'}
+      >
+        I want to log in
+      </Link>
     </div>
   )
 }
