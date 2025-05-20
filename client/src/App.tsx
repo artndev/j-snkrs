@@ -5,6 +5,8 @@ import LoginForm from './routes/LoginForm'
 import RegisterForm from './routes/RegisterForm'
 import Fallback from './routes/Fallback'
 import Layout from './outlets/Layout'
+import Products from './routes/Products'
+import Product from './routes/Product'
 
 const App = () => {
   return (
@@ -18,7 +20,10 @@ const App = () => {
             <Route path="/register" element={<RegisterForm />} />
           </Route>
 
-          <Route path="fallback" element={<Fallback />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Product />} />
+
+          <Route path="/fallback" element={<Fallback />} />
           <Route path="*" element={<h3>Blank page</h3>} />
         </Route>
       </Routes>
