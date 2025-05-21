@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Circle, CircleCheck } from 'lucide-react'
+import { Circle, CircleCheck, Heart, Plus, ShoppingBasket } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import config from '../config.json'
 import '../styles/css/ProductFront.css'
@@ -75,7 +75,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                         setColor(val)
                       }}
                     >
-                      <span>{val.charAt(0).toUpperCase() + val.slice(1)}</span>
+                      {val.charAt(0).toUpperCase() + val.slice(1)}
                       {color !== val ? <Circle /> : <CircleCheck />}
                     </Button>
                   )
@@ -90,7 +90,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                     <Button
                       key={i}
                       className="flex justify-between w-full"
-                      variant={'outline'}
+                      variant={'ghost'}
                       onClick={() => {
                         if (variant.key === i && variant.color === color) {
                           return
@@ -116,6 +116,15 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 })}
               </div>
             )}
+            <div className="flex gap-[5px] w-full">
+              <Button size={'icon'}>
+                <Heart />
+              </Button>
+              <Button className="flex-1">
+                Add to my cart
+                <ShoppingBasket />
+              </Button>
+            </div>
           </CardFooter>
         </Card>
       </div>
