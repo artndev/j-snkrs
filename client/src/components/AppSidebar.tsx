@@ -1,5 +1,11 @@
 import React from 'react'
-import { Home, ShoppingBag, History, ChevronUp } from 'lucide-react'
+import {
+  Home,
+  ShoppingBag,
+  History,
+  ChevronUp,
+  ShoppingBasket,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -21,18 +27,23 @@ import {
 const items = [
   {
     title: 'Home',
-    url: '#',
+    url: '/',
     icon: Home,
   },
   {
     title: 'Products',
-    url: '#',
+    url: '/products',
     icon: ShoppingBag,
   },
   {
     title: 'History',
     url: '#',
     icon: History,
+  },
+  {
+    title: 'Cart',
+    url: '#',
+    icon: ShoppingBasket,
   },
 ]
 

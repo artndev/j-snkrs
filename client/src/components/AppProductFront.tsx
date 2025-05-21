@@ -7,10 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Circle, CircleCheck, Heart, Plus, ShoppingBasket } from 'lucide-react'
+import { Circle, CircleCheck, CirclePlus, Heart, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import config from '../config.json'
 import '../styles/css/ProductFront.css'
+import { Link } from 'react-router-dom'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   name,
@@ -121,10 +122,16 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 <Heart />
               </Button>
               <Button className="flex-1">
-                Add to my cart
-                <ShoppingBasket />
+                Grab it
+                <Plus />
               </Button>
             </div>
+            <Link
+              className="text-sm text-muted-foreground hover:underline"
+              to={'/products'}
+            >
+              Go to my cart
+            </Link>
           </CardFooter>
         </Card>
       </div>
