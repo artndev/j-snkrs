@@ -12,8 +12,11 @@ import React, { useEffect, useState } from 'react'
 import config from '../config.json'
 import '../styles/css/ProductFront.css'
 import { Link } from 'react-router-dom'
+import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
+import { addProduct } from '@/pizza_slices/Cart'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
+  id,
   name,
   price,
   currency,
@@ -22,22 +25,26 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   sizes,
   image,
 }) => {
-  const [variant, setVariant] = useState<
-    { key: number; size: { M: string; W: string }; color: string } | undefined
-  >(undefined)
+  const [variant, setVariant] = useState<IVariant | undefined>(undefined)
   const [color, setColor] = useState<string | undefined>(undefined)
   const colors: string[] = Object.keys(sizes)
+
+  const products = useReduxSelector(state => state.products)
+  const dispatch = useReduxDispatch()
+
+  useEffect(() => {
+    console.log(products)
+  }, [products])
 
   useEffect(() => {
     const key = 0
     if (!colors.length) return
 
-    const keyColor = colors[key]
-    setColor(keyColor)
+    setColor(colors[key])
     setVariant({
       key: key,
-      size: sizes[keyColor!]![key]!,
-      color: keyColor!,
+      size: sizes[colors[key]!]![key]!,
+      color: colors[key]!,
     })
   }, [])
 
@@ -121,7 +128,23 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
               <Button size={'icon'}>
                 <Heart />
               </Button>
-              <Button className="flex-1">
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  dispatch(
+                    addProduct({
+                      id: id,
+                      name: name,
+                      price: price,
+                      currency: currency,
+                      description: description,
+                      image: image,
+                      variant: variant,
+                      quantity: 1,
+                    })
+                  )
+                }}
+              >
                 Grab it
                 <Plus />
               </Button>

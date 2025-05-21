@@ -29,31 +29,21 @@ declare global {
     [Key: string]: T
   }
 
-  export interface IAuthFormProps {
-    formTitle: string
-    onSubmit: (...args) => void
-    err: IAxiosErrorResponse
-    withEmail?: boolean
-    withSocials?: boolean
+  export interface ISize {
+    size: {
+      M: string
+      W: string
+    }
   }
 
-  export interface IProductBackProps {
-    id: number
-    name: string
-    price: number
-    currency: 'usd' | 'eur'
-    description: string
-    image: string
+  export interface IVariant extends ISize {
+    key: number
+    color: string
   }
 
-  export interface IProductFrontProps {
+  export interface ICart extends IProductBackProps {
     id: number
-    name: string
-    price: number
-    currency: 'usd' | 'eur'
-    description: string
-    details: string
-    sizes: Dictionary<{ M: string; W: string }[]>
-    image: string
+    variant: IVariant
+    quantity: number
   }
 }
