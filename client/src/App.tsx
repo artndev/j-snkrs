@@ -8,6 +8,7 @@ import Layout from './outlets/Layout'
 import Products from './routes/Products'
 import Product from './routes/Product'
 import Cart from './routes/Cart'
+import IsNotCartEmpty from './outlets/IsNotCartEmpty'
 
 const App = () => {
   return (
@@ -21,7 +22,9 @@ const App = () => {
             <Route path="/register" element={<RegisterForm />} />
           </Route>
 
-          <Route path="/cart" element={<Cart />} />
+          <Route element={<IsNotCartEmpty />}>
+            <Route path="/cart" element={<Cart />} />
+          </Route>
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Product />} />
 

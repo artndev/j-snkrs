@@ -7,14 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Circle,
-  CircleCheck,
-  CirclePlus,
-  Heart,
-  Minus,
-  Plus,
-} from 'lucide-react'
+import { Circle, CircleCheck, Heart, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import config from '../config.json'
 import '../styles/css/ProductFront.css'
@@ -37,12 +30,12 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   const [color, setColor] = useState<string | undefined>(undefined)
   const colors: string[] = Object.keys(sizes)
 
-  const products = useReduxSelector(state => state.products)
+  const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()
 
-  useEffect(() => {
-    console.log(products)
-  }, [products])
+  // useEffect(() => {
+  //   console.log(products)
+  // }, [products])
 
   useEffect(() => {
     const key = 0
@@ -61,7 +54,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   // }, [color, variant])
 
   return (
-    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)]">
+    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)] max-h-[800px]">
       <Card className="flex justify-center items-center flex-1">
         <img src={image} alt="CardHeader" className="object-cover" />
       </Card>
@@ -153,7 +146,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                       {
                         description: (
                           <span className="text-muted-foreground">
-                            Total amount: {totalQuantity}
+                            Total: {totalQuantity}
                           </span>
                         ),
                       }
@@ -186,7 +179,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                     {
                       description: (
                         <span className="text-muted-foreground">
-                          Total amount: {totalQuantity}
+                          Total: {totalQuantity}
                         </span>
                       ),
                     }
@@ -199,7 +192,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
             </div>
             <Link
               className="text-sm text-muted-foreground hover:underline"
-              to={'/products'}
+              to={'/cart'}
             >
               Go to my cart
             </Link>

@@ -7,10 +7,15 @@
   /* margin: 0; */
   /* padding: 0; */
   box-sizing: border-box;
+  scrollbar-width: thin;
 }
 
-#root {
+/* #root {
   overflow: hidden;
+} */
+
+.text-muted {
+  @apply text-muted-foreground text-sm;
 }
 
 @theme inline {

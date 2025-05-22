@@ -46,4 +46,6 @@ declare global {
     variant: IVariant
     quantity: number
   }
+
+  export type ICurrency = 'usd' | 'eur'
 }

@@ -13,7 +13,7 @@ declare global {
     id: number
     name: string
     price: number
-    currency: 'usd' | 'eur'
+    currency: ICurrency
     description: string
     image: string
   }
@@ -22,7 +22,7 @@ declare global {
     id: number
     name: string
     price: number
-    currency: 'usd' | 'eur'
+    currency: ICurrency
     description: string
     details: string
     sizes: Dictionary<{ M: string; W: string }[]>
