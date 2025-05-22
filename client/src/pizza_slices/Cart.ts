@@ -1,7 +1,10 @@
 import { createSlice, current } from '@reduxjs/toolkit'
 
-const initialState: { products: ICart[]; totalPrice: number } = {
-  products: [],
+const initialState: {
+  products: Dictionary<Dictionary<ICart>>
+  totalPrice: number
+} = {
+  products: {},
   totalPrice: 0,
 }
 
@@ -10,39 +13,28 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addProduct: (state, action) => {
-      const res = state.products.filter((val, _i) => {
-        const cur = current(val)
-        return (
-          cur.id === action.payload.id &&
-          JSON.stringify(cur.variant) === JSON.stringify(action.payload.variant)
-        )
-      })
-
-      if (!res.length) {
-        state.products = [...state.products, action.payload]
+      const { id, variant, ...payload } = action.payload
+      const product = state.products[id]
+      if (!product || !product[JSON.stringify(variant)]) {
+        if (!state.products[id]) state.products[id] = {}
+        state.products[id][JSON.stringify(variant)] = payload
         return
       }
 
-      state.products = state.products.map((val, i) => {
-        const cur = current(val)
-        if (
-          cur.id === action.payload.id &&
-          JSON.stringify(cur.variant) === JSON.stringify(action.payload.variant)
-        ) {
-          state.totalPrice += cur.price
-          val.quantity += 1
-        }
-
-        // console.log(state.totalPrice)
-        return val
-      })
+      state.products[id]![JSON.stringify(variant)]!.quantity += 1
     },
-    popProduct: state => {
-      state.products.pop()
+    removeProduct: (state, action) => {
+      const { id, variant } = action.payload
+      const product = state.products[id]
+      if (!product || !product[JSON.stringify(variant)]) return
+
+      state.products[id]![JSON.stringify(variant)]!.quantity -= 1
+      if (!state.products[id]![JSON.stringify(variant)]!.quantity)
+        delete state.products[id]
     },
   },
 })
 
-export const { addProduct } = cartSlice.actions
+export const { addProduct, removeProduct } = cartSlice.actions
 
 export default cartSlice.reducer

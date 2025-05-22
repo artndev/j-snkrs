@@ -7,13 +7,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Circle, CircleCheck, CirclePlus, Heart, Plus } from 'lucide-react'
+import {
+  Circle,
+  CircleCheck,
+  CirclePlus,
+  Heart,
+  Minus,
+  Plus,
+} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import config from '../config.json'
 import '../styles/css/ProductFront.css'
 import { Link } from 'react-router-dom'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
-import { addProduct } from '@/pizza_slices/Cart'
+import { addProduct, removeProduct } from '@/pizza_slices/Cart'
+import { toast } from 'sonner'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,
@@ -53,7 +61,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   // }, [color, variant])
 
   return (
-    <div className="product__front-subcontainer flex gap-[20px] w-[min(800px,_100%)]">
+    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)]">
       <Card className="flex justify-center items-center flex-1">
         <img src={image} alt="CardHeader" className="object-cover" />
       </Card>
@@ -93,7 +101,6 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
             {color && variant && (
               <div className="flex flex-col gap-[5px] w-full">
                 {sizes[color]!.map((val, i) => {
-                  console.log(color, val, i, variant.key, variant.color)
                   return (
                     <Button
                       key={i}
@@ -128,9 +135,39 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
               <Button size={'icon'}>
                 <Heart />
               </Button>
+              {products[id]?.[JSON.stringify(variant)] && (
+                <Button
+                  size={'icon'}
+                  onClick={() => {
+                    const totalQuantity =
+                      products[id]?.[JSON.stringify(variant)]?.quantity - 1 || 0
+                    dispatch(
+                      removeProduct({
+                        id: id,
+                        variant: variant,
+                      })
+                    )
+
+                    toast(
+                      `'${name} • ${color} • M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
+                      {
+                        description: (
+                          <span className="text-muted-foreground">
+                            Total amount: {totalQuantity}
+                          </span>
+                        ),
+                      }
+                    )
+                  }}
+                >
+                  <Minus />
+                </Button>
+              )}
               <Button
                 className="flex-1"
                 onClick={() => {
+                  const totalQuantity =
+                    products[id]?.[JSON.stringify(variant)]?.quantity + 1 || 1
                   dispatch(
                     addProduct({
                       id: id,
@@ -143,9 +180,20 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                       quantity: 1,
                     })
                   )
+
+                  toast(
+                    `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
+                    {
+                      description: (
+                        <span className="text-muted-foreground">
+                          Total amount: {totalQuantity}
+                        </span>
+                      ),
+                    }
+                  )
                 }}
               >
-                Grab it
+                Add it
                 <Plus />
               </Button>
             </div>

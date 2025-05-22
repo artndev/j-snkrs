@@ -42,7 +42,7 @@ const items = [
   },
   {
     title: 'Cart',
-    url: '#',
+    url: '/cart',
     icon: ShoppingBasket,
   },
 ]
