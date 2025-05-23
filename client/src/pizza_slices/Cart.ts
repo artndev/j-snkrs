@@ -45,6 +45,33 @@ export const cartSlice = createSlice({
     },
   },
   selectors: {
+    getProducts: state => {
+      let products: (ICart & {
+        totalProductPrice: number
+        totalProductPriceCoded: string
+      })[] = []
+
+      Object.keys(state.products).forEach(id => {
+        if (!state.products[id]) return
+
+        for (const [_key, product] of Object.entries(state.products[id]))
+          products.push({
+            ...product,
+            totalProductPrice: product.quantity * product.price,
+            totalProductPriceCoded: `${product.quantity * product.price}${config.currencyCodes[product.currency]}`,
+          })
+      })
+
+      return products
+    },
+    getProductsAmount: state => {
+      let idsAmount = 0
+      Object.keys(state.products).forEach(id => {
+        idsAmount += Object.keys(state.products[id] || {}).length
+      })
+
+      return idsAmount
+    },
     getTotalPrice: state => {
       return `${state.totalPrice}${config.currencyCodes[state.globalCurrency]}`
     },
@@ -52,6 +79,7 @@ export const cartSlice = createSlice({
 })
 
 export const { addProduct, removeProduct } = cartSlice.actions
-export const { getTotalPrice } = cartSlice.selectors
+export const { getTotalPrice, getProductsAmount, getProducts } =
+  cartSlice.selectors
 
 export default cartSlice.reducer

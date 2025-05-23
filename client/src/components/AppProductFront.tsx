@@ -54,9 +54,9 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   // }, [color, variant])
 
   return (
-    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)] max-h-[800px]">
-      <Card className="flex justify-center items-center flex-1">
-        <img src={image} alt="CardHeader" className="object-cover" />
+    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)]">
+      <Card className="flex-1 flex justify-center items-center">
+        <img src={image} alt="CardHeader" className="object-cover w-full" />
       </Card>
       <div className="flex-1">
         <Card className="gap-[10px]">
@@ -74,7 +74,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                   return (
                     <Button
                       key={i}
-                      className="flex justify-between"
+                      className="flex justify-between items-center"
                       variant={'outline'}
                       onClick={() => {
                         if (color === val) {
@@ -97,7 +97,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                   return (
                     <Button
                       key={i}
-                      className="flex justify-between w-full"
+                      className="flex justify-between items-center"
                       variant={'ghost'}
                       onClick={() => {
                         if (variant.key === i && variant.color === color) {
@@ -142,7 +142,8 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                     )
 
                     toast(
-                      `'${name} • ${color} • M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
+                      `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
+                      M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
                       {
                         description: (
                           <span className="text-muted-foreground">
@@ -175,9 +176,10 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                   )
 
                   toast(
-                    `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
+                    `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
+                    M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
                     {
-                      description: (
+                      description: totalQuantity > 0 && (
                         <span className="text-muted-foreground">
                           Total: {totalQuantity}
                         </span>
@@ -190,10 +192,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 <Plus />
               </Button>
             </div>
-            <Link
-              className="text-sm text-muted-foreground hover:underline"
-              to={'/cart'}
-            >
+            <Link className="text-muted hover:underline" to={'/cart'}>
               Go to my cart
             </Link>
           </CardFooter>

@@ -1,8 +1,5 @@
 @media screen and (max-width: 1000px) {
   .cart {
-    @apply flex-col h-screen;
-  }
-  .cart__checkout {
-    @apply flex-0 w-full;
+    @apply grid-cols-[100%] grid-rows-[max-content_1fr];
   }
 }
