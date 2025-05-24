@@ -68,7 +68,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
         <CardContent>{details}</CardContent>
         <CardFooter className="card__footer flex flex-col gap-[10px]">
           {color && (
-            <div className="grid grid-cols-[repeat(2,_1fr)] gap-[5px] w-full">
+            <div className="grid grid-cols-[repeat(2,_1fr)] grid-rows-[max-content] gap-[5px] w-full">
               {colors.map((val, i) => {
                 return (
                   <Button

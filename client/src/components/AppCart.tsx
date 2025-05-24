@@ -21,12 +21,16 @@ import {
 } from '@/pizza_slices/Cart'
 import { toast } from 'sonner'
 import '../styles/css/Cart.css'
+import { useAuthContext } from '@/contexts/Auth'
+import { useNavigate } from 'react-router-dom'
 
 const AppCart = () => {
   const totalPrice = useReduxSelector(getTotalPrice)
   const productsAmount = useReduxSelector(getProductsAmount)
   const products = useReduxSelector(getProducts)
   const dispatch = useReduxDispatch()
+  const { auth } = useAuthContext()
+  const navigate = useNavigate()
 
   // useEffect(() => {
   //   console.log(products)
@@ -42,7 +46,7 @@ const AppCart = () => {
             return (
               <Card
                 key={i}
-                className="grid grid-cols-[repeat(2,_1fr)] gap-[10px]"
+                className="grid grid-cols-[repeat(2,_1fr)] grid-rows-[max-content] gap-[10px]"
               >
                 <div className="flex flex-col gap-[10px]">
                   <CardHeader className="pr-[0px]">
@@ -134,7 +138,17 @@ const AppCart = () => {
           </CardHeader>
           <CardContent>~{totalPrice}</CardContent>
           <CardFooter>
-            <Button className="w-full">
+            <Button
+              className="w-full"
+              onClick={() => {
+                if (!auth) {
+                  navigate('/login')
+                  return
+                }
+
+                console.log('Pay by card')
+              }}
+            >
               <CreditCard />
               Pay by card
             </Button>

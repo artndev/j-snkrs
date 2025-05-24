@@ -28,4 +28,12 @@ declare global {
     sizes: Dictionary<{ M: string; W: string }[]>
     image: string
   }
+
+  export interface IAccountProps {
+    id: number | undefined
+    username: string | undefined
+    email: string | undefined
+    googleId: string | undefined
+    githubId: string | undefined
+  }
 }

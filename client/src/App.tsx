@@ -9,6 +9,8 @@ import Products from './routes/Products'
 import Product from './routes/Product'
 import Cart from './routes/Cart'
 import IsNotCartEmpty from './outlets/IsNotCartEmpty'
+import IsLogged from './outlets/IsLogged'
+import Account from './routes/Account'
 
 const App = () => {
   return (
@@ -21,6 +23,9 @@ const App = () => {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
           </Route>
+
+          {/* <Route path="/account" element={<Account />} /> */}
+          <Route path="/account" element={<Account />} />
 
           <Route element={<IsNotCartEmpty />}>
             <Route path="/cart" element={<Cart />} />

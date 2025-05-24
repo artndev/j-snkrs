@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Home,
   ShoppingBag,
   History,
   ChevronUp,
   ShoppingBasket,
+  User2,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -23,6 +24,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthContext } from '@/contexts/Auth'
+import axios from '../axios.js'
 
 const items = [
   {
@@ -35,24 +39,43 @@ const items = [
     url: '/products',
     icon: ShoppingBag,
   },
-  {
-    title: 'History',
-    url: '#',
-    icon: History,
-  },
+  // {
+  //   title: 'History',
+  //   url: '#',
+  //   icon: History,
+  // },
   {
     title: 'Cart',
     url: '/cart',
     icon: ShoppingBasket,
   },
+  {
+    title: 'Account',
+    url: '/account',
+    icon: User2,
+  },
 ]
 
 const AppSidebar = () => {
+  const { auth, setAuth } = useAuthContext()
+  const navigate = useNavigate()
+
+  const logout = () => {
+    try {
+      axios
+        .post('/api/auth/logout')
+        .then(() => setAuth(undefined))
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Sneakers Store</SidebarGroupLabel>
+          <SidebarGroupLabel>J-SNKRS</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map(item => (
@@ -75,7 +98,7 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  Username
+                  {auth?.Username || 'guest'}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -83,11 +106,20 @@ const AppSidebar = () => {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                <DropdownMenuItem>
-                  <span>Account</span>
+                <DropdownMenuItem onClick={() => navigate('/account')}>
+                  Account
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Log out</span>
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (!auth) {
+                      navigate('/login')
+                      return
+                    }
+
+                    logout()
+                  }}
+                >
+                  <span>{!auth ? 'Log in' : 'Log out'}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

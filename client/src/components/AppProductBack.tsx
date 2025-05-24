@@ -21,7 +21,7 @@ const AppProductBack: React.FC<IProductBackProps> = ({
     <Card className="gap-[10px]">
       <CardHeader>
         <Link to={`/products/${id}`}>
-          <img src={image} alt="CardHeader" className="object-cover" />
+          <img src={image} alt="CardHeader" className="object-cover w-full" />
         </Link>
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>

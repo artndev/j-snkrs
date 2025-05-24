@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import type { ResultSetHeader } from 'mysql2'
 import pool from '../pool.js'
+import { Request, Response } from 'express'
 
 export default {
   Register: async (credentials: ICredentials) => {
@@ -134,23 +135,90 @@ export default {
       throw new Error('Server is not responding')
     }
   },
-  // FindById: async (id: number) => {
-  //   try {
-  //     const [rows] = await pool.query<IUser[]>(
-  //       'SELECT * FROM Users WHERE Id = ?;',
-  //       [id]
-  //     )
+  UnattachGithubId: async (req: Request, res: Response) => {
+    try {
+      const [rows] = await pool.query<ResultSetHeader>(
+        `
+          UPDATE Users SET GithubId = NULL
+          WHERE Id = ?;
+        `,
+        [req.user!.Id]
+      )
 
-  //     if (!rows.length) throw new Error('Entry with this id is not found')
+      if (!rows.affectedRows) {
+        res.status(404).json({
+          message: 'User is not found',
+          answer: null,
+        })
+        return
+      }
 
-  //     return {
-  //       message: 'You have successfully found entry with this id',
-  //       answer: rows[0],
-  //     }
-  //   } catch (err) {
-  //     console.log(err)
+      const [rows2] = await pool.query<IUser[]>(
+        'SELECT * FROM Users WHERE Id = ?;',
+        [req.user!.Id]
+      )
 
-  //     throw new Error('Server is not responding')
-  //   }
-  // },
+      req.session!.passport!.user!.GithubId = null
+      req.session.save(err => {
+        if (err) {
+          console.log(err)
+        }
+      })
+
+      res.status(200).json({
+        message: 'You have successfully unattached social id',
+        answer: rows2[0],
+      })
+    } catch (err) {
+      console.log(err)
+
+      res.status(500).json({
+        message: 'Server is not responding',
+        answer: null,
+      })
+    }
+  },
+  UnattachGoogleId: async (req: Request, res: Response) => {
+    try {
+      const [rows] = await pool.query<ResultSetHeader>(
+        `
+          UPDATE Users SET GoogleId = NULL
+          WHERE Id = ?;
+        `,
+        [req.user!.Id]
+      )
+
+      if (!rows.affectedRows) {
+        res.status(404).json({
+          message: 'User is not found',
+          answer: null,
+        })
+        return
+      }
+
+      const [rows2] = await pool.query<IUser[]>(
+        'SELECT * FROM Users WHERE Id = ?;',
+        [req.user!.Id]
+      )
+
+      req.session!.passport!.user!.GoogleId = null
+      req.session.save(err => {
+        if (err) {
+          console.log(err)
+        }
+      })
+
+      res.status(200).json({
+        message: 'You have successfully unattached social id',
+        answer: rows2[0],
+      })
+    } catch (err) {
+      console.log(err)
+
+      res.status(500).json({
+        message: 'Server is not responding',
+        answer: null,
+      })
+    }
+  },
 }

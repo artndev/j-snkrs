@@ -1,11 +1,11 @@
 @media screen and (max-width: 1000px) {
   .cart__subcontainer {
-    @apply grid-cols-[100%];
+    grid-template-columns: 100% !important;
   }
 }
 
 @media screen and (min-width: 1000px) {
   .cart__checkout {
-    @apply max-h-[250px];
+    max-height: 250px !important;
   }
 }

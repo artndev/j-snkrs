@@ -150,7 +150,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
             </div>
           </>
         )}
-        <Button className="w-[50%] self-center mt-[10px]" type="submit">
+        <Button className="w-full self-center mt-[10px]" type="submit">
           Submit
         </Button>
       </form>

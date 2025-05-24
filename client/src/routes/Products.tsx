@@ -4,7 +4,7 @@ import '../styles/css/Products.css'
 
 const Products = () => {
   return (
-    <div className="products__container">
+    <div className="products__container grid grid-cols-[repeat(3,_1fr)] grid-rows-[max-content] gap-[20px] p-[20px]">
       <AppProductBack
         id={1}
         name="Nike SB Dunk Low Pro"

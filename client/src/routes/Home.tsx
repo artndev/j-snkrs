@@ -21,9 +21,9 @@ const Home = () => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log(auth)
-  // }, [auth])
+  useEffect(() => {
+    console.log(auth)
+  }, [auth])
 
   return (
     <>

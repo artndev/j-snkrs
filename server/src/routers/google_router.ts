@@ -1,6 +1,8 @@
 import express from 'express'
 import passport from 'passport'
 import config from '../config.json' with { type: 'json' }
+import { usersController } from '../controllers/_controllers.js'
+import { isAuthenticated } from '../middlewares.js'
 
 const router = express.Router()
 
@@ -24,10 +26,12 @@ router.get('/callback', (req, res, next) => {
       req.logIn(user, err2 => {
         if (err2) return res.redirect(`${config.CLIENT_URL}/fallback`)
 
-        return res.redirect(`${config.CLIENT_URL}`)
+        return res.redirect(`${config.CLIENT_URL}/account`)
       })
     }
   )(req, res, next)
 })
+
+router.post('/unattach', isAuthenticated, usersController.UnattachGoogleId)
 
 export default router

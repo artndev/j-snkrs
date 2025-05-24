@@ -17,7 +17,7 @@ const LoginForm = () => {
           setAuth(res.data.answer)
         })
         .then(() => {
-          navigator('/')
+          navigator('/account')
           navigator(0)
         })
         .catch(err => {

@@ -13,12 +13,12 @@ const RegisterForm = () => {
   const onSubmit = (data: IAuthFormData) => {
     try {
       axios
-        .post('/api/local/login', data)
+        .post('/api/local/register', data)
         .then(res => {
           setAuth(res.data.answer)
         })
         .then(() => {
-          navigator('/')
+          navigator('/account')
           navigator(0)
         })
         .catch(err => {
