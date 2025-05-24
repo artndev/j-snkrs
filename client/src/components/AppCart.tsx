@@ -34,7 +34,7 @@ const AppCart = () => {
 
   return (
     <>
-      <div className="cart grid grid-cols-[repeat(2_,1fr)] gap-[20px] w-[min(1000px,_100%)]">
+      <div className="cart__subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
         <div
           className={`flex flex-col gap-[10px] max-h-[500px] ${productsAmount > 1 && 'overflow-y-scroll'}`}
         >
@@ -56,7 +56,10 @@ const AppCart = () => {
                     <CardTitle>{product.name}</CardTitle>
                     <CardDescription>{product.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>{product.totalProductPriceCoded}</CardContent>
+                  <CardContent>
+                    {product.totalProductPriceCoded}{' '}
+                    {product.quantity > 1 && `(x${product.quantity})`}
+                  </CardContent>
                 </div>
                 <div>
                   <CardFooter className="flex flex-col items-start gap-[5px] pl-[0px]">
@@ -124,7 +127,7 @@ const AppCart = () => {
           })}
         </div>
 
-        <Card className="flex-1 gap-[10px]">
+        <Card className="cart__checkout gap-[10px]">
           <CardHeader>
             <CardTitle>Checkout</CardTitle>
             <CardDescription>Make the payment</CardDescription>

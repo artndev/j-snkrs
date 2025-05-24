@@ -54,130 +54,95 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   // }, [color, variant])
 
   return (
-    <div className="product__front-subcontainer flex gap-[20px] w-[min(1000px,_100%)]">
-      <Card className="flex-1 flex justify-center items-center">
+    <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
+      <Card className="flex justify-center items-center max-h-[500px]">
         <img src={image} alt="CardHeader" className="object-cover w-full" />
       </Card>
-      <div className="flex-1">
-        <Card className="gap-[10px]">
-          <CardHeader>
-            <CardTitle>
-              {name} — {price + config.currencyCodes[currency]}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>
-          <CardContent>{details}</CardContent>
-          <CardFooter className="card__footer flex flex-col gap-[10px]">
-            {color && (
-              <div className="grid grid-cols-[repeat(2,_1fr)] gap-[5px] w-full">
-                {colors.map((val, i) => {
-                  return (
-                    <Button
-                      key={i}
-                      className="flex justify-between items-center"
-                      variant={'outline'}
-                      onClick={() => {
-                        if (color === val) {
-                          return
-                        }
-
-                        setColor(val)
-                      }}
-                    >
-                      {val.charAt(0).toUpperCase() + val.slice(1)}
-                      {color !== val ? <Circle /> : <CircleCheck />}
-                    </Button>
-                  )
-                })}
-              </div>
-            )}
-            {color && variant && (
-              <div className="flex flex-col gap-[5px] w-full">
-                {sizes[color]!.map((val, i) => {
-                  return (
-                    <Button
-                      key={i}
-                      className="flex justify-between items-center"
-                      variant={'ghost'}
-                      onClick={() => {
-                        if (variant.key === i && variant.color === color) {
-                          return
-                        }
-
-                        setVariant({
-                          key: i,
-                          size: val,
-                          color: color,
-                        })
-                      }}
-                    >
-                      <span>
-                        M {val.M} / W {val.W}
-                      </span>
-                      {i !== variant.key || color !== variant.color ? (
-                        <Circle />
-                      ) : (
-                        <CircleCheck />
-                      )}
-                    </Button>
-                  )
-                })}
-              </div>
-            )}
-            <div className="flex gap-[5px] w-full">
-              <Button size={'icon'}>
-                <Heart />
-              </Button>
-              {products[id]?.[JSON.stringify(variant)] && (
-                <Button
-                  size={'icon'}
-                  onClick={() => {
-                    const totalQuantity =
-                      products[id]?.[JSON.stringify(variant)]?.quantity - 1 || 0
-                    dispatch(
-                      removeProduct({
-                        id: id,
-                        variant: variant,
-                      })
-                    )
-
-                    toast(
-                      `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
-                      M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
-                      {
-                        description: (
-                          <span className="text-muted-foreground">
-                            Total: {totalQuantity}
-                          </span>
-                        ),
+      <Card className="gap-[10px]">
+        <CardHeader>
+          <CardTitle>
+            {name} — {price + config.currencyCodes[currency]}
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>{details}</CardContent>
+        <CardFooter className="card__footer flex flex-col gap-[10px]">
+          {color && (
+            <div className="grid grid-cols-[repeat(2,_1fr)] gap-[5px] w-full">
+              {colors.map((val, i) => {
+                return (
+                  <Button
+                    key={i}
+                    className="flex justify-between items-center"
+                    variant={'outline'}
+                    onClick={() => {
+                      if (color === val) {
+                        return
                       }
-                    )
-                  }}
-                >
-                  <Minus />
-                </Button>
-              )}
+
+                      setColor(val)
+                    }}
+                  >
+                    {val.charAt(0).toUpperCase() + val.slice(1)}
+                    {color !== val ? <Circle /> : <CircleCheck />}
+                  </Button>
+                )
+              })}
+            </div>
+          )}
+          {color && variant && (
+            <div className="flex flex-col gap-[5px] w-full">
+              {sizes[color]!.map((val, i) => {
+                return (
+                  <Button
+                    key={i}
+                    className="flex justify-between items-center"
+                    variant={'ghost'}
+                    onClick={() => {
+                      if (variant.key === i && variant.color === color) {
+                        return
+                      }
+
+                      setVariant({
+                        key: i,
+                        size: val,
+                        color: color,
+                      })
+                    }}
+                  >
+                    <span>
+                      M {val.M} / W {val.W}
+                    </span>
+                    {i !== variant.key || color !== variant.color ? (
+                      <Circle />
+                    ) : (
+                      <CircleCheck />
+                    )}
+                  </Button>
+                )
+              })}
+            </div>
+          )}
+          <div className="flex gap-[5px] w-full">
+            <Button size={'icon'}>
+              <Heart />
+            </Button>
+            {products[id]?.[JSON.stringify(variant)] && (
               <Button
-                className="flex-1"
+                size={'icon'}
                 onClick={() => {
                   const totalQuantity =
-                    products[id]?.[JSON.stringify(variant)]?.quantity + 1 || 1
+                    products[id]?.[JSON.stringify(variant)]?.quantity - 1 || 0
                   dispatch(
-                    addProduct({
+                    removeProduct({
                       id: id,
-                      name: name,
-                      price: price,
-                      currency: currency,
-                      description: description,
-                      image: image,
                       variant: variant,
-                      quantity: 1,
                     })
                   )
 
                   toast(
                     `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
-                    M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
+                      M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
                     {
                       description: totalQuantity > 0 && (
                         <span className="text-muted-foreground">
@@ -188,16 +153,49 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                   )
                 }}
               >
-                Add it
-                <Plus />
+                <Minus />
               </Button>
-            </div>
-            <Link className="text-muted hover:underline" to={'/cart'}>
-              Go to my cart
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
+            )}
+            <Button
+              className="flex-1"
+              onClick={() => {
+                const totalQuantity =
+                  products[id]?.[JSON.stringify(variant)]?.quantity + 1 || 1
+                dispatch(
+                  addProduct({
+                    id: id,
+                    name: name,
+                    price: price,
+                    currency: currency,
+                    description: description,
+                    image: image,
+                    variant: variant,
+                    quantity: 1,
+                  })
+                )
+
+                toast(
+                  `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
+                    M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
+                  {
+                    description: totalQuantity > 0 && (
+                      <span className="text-muted-foreground">
+                        Total: {totalQuantity}
+                      </span>
+                    ),
+                  }
+                )
+              }}
+            >
+              Add it
+              <Plus />
+            </Button>
+          </div>
+          <Link className="text-muted hover:underline" to={'/cart'}>
+            Go to my cart
+          </Link>
+        </CardFooter>
+      </Card>
     </div>
   )
 }

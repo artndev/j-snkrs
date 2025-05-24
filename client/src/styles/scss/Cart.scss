@@ -1,5 +1,11 @@
 @media screen and (max-width: 1000px) {
-  .cart {
-    @apply grid-cols-[100%] grid-rows-[max-content_1fr];
+  .cart__subcontainer {
+    @apply grid-cols-[100%];
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .cart__checkout {
+    @apply max-h-[250px];
   }
 }

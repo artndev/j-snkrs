@@ -3,7 +3,7 @@ import React from 'react'
 
 const Product = () => {
   return (
-    <div className="flex justify-center p-[20px]">
+    <div className="flex justify-center h-screen p-[20px]">
       {/* <AppProductFront
         id={1}
         name="Nike SB Dunk Low Pro"
