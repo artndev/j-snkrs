@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -8,12 +8,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import config from '../config.json'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({

@@ -10,8 +10,24 @@ declare global {
     Updated: string
   }
 
-  export interface IProductCheckout extends IProduct {
-    Quantity: number
+  export interface IProductCheckout {
+    currency: 'usd' | 'eur'
+    description: string
+    id: number
+    image: string
+    name: string
+    price: number
+    quantity: number
+    totalProductPrice: number
+    totalProductPriceCoded: string
+    variant: {
+      key: number
+      color: string
+      size: {
+        M: string
+        W: string
+      }
+    }
   }
 
   export interface IUser extends ResultSetHeader {

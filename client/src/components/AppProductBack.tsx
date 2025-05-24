@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Card,
   CardContent,
@@ -6,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import config from '../config.json'
 

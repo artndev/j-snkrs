@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react'
 import {
-  Home,
-  ShoppingBag,
-  History,
-  ChevronUp,
-  ShoppingBasket,
-  User2,
-} from 'lucide-react'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
 } from '@/components/ui/sidebar'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
-import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '@/contexts/Auth'
+import {
+  ChevronUp,
+  Home,
+  ShoppingBag,
+  ShoppingBasket,
+  User2,
+} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import axios from '../axios.js'
 
 const items = [
@@ -57,8 +55,8 @@ const items = [
 ]
 
 const AppSidebar = () => {
-  const { auth, setAuth } = useAuthContext()
   const navigate = useNavigate()
+  const { auth, setAuth } = useAuthContext()
 
   const logout = () => {
     try {

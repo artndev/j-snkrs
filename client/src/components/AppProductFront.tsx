@@ -7,14 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { addProduct, removeProduct } from '@/pizza_slices/Cart'
 import { Circle, CircleCheck, Heart, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import config from '../config.json'
-import '../styles/css/ProductFront.css'
 import { Link } from 'react-router-dom'
-import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
-import { addProduct, removeProduct } from '@/pizza_slices/Cart'
 import { toast } from 'sonner'
+import config from '../config.json'
+import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
+import '../styles/css/ProductFront.css'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,
@@ -26,9 +26,9 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   sizes,
   image,
 }) => {
+  const colors: string[] = Object.keys(sizes)
   const [variant, setVariant] = useState<IVariant | undefined>(undefined)
   const [color, setColor] = useState<string | undefined>(undefined)
-  const colors: string[] = Object.keys(sizes)
 
   const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()

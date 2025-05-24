@@ -1,5 +1,3 @@
-import React, { useEffect } from 'react'
-import '../styles/css/ProductFront.css'
 import {
   Card,
   CardContent,
@@ -8,10 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from './ui/button'
-import config from '../config.json'
-import { CreditCard, Minus, Plus } from 'lucide-react'
-import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
+import { useAuthContext } from '@/contexts/Auth'
 import {
   addProduct,
   getProducts,
@@ -19,22 +14,51 @@ import {
   getTotalPrice,
   removeProduct,
 } from '@/pizza_slices/Cart'
-import { toast } from 'sonner'
-import '../styles/css/Cart.css'
-import { useAuthContext } from '@/contexts/Auth'
+import { loadStripe } from '@stripe/stripe-js'
+import { CreditCard, Minus, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import axios from '../axios.js'
+import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
+import '../styles/css/Cart.css'
+import { Button } from './ui/button'
 
 const AppCart = () => {
+  const navigate = useNavigate()
+  const { auth } = useAuthContext()
+
   const totalPrice = useReduxSelector(getTotalPrice)
   const productsAmount = useReduxSelector(getProductsAmount)
   const products = useReduxSelector(getProducts)
   const dispatch = useReduxDispatch()
-  const { auth } = useAuthContext()
-  const navigate = useNavigate()
 
   // useEffect(() => {
-  //   console.log(products)
-  // }, [products])
+  //   // @ts-ignore
+  //   console.log(process.env)
+  // }, [])
+
+  const makePayment = async () => {
+    const stripe = await loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY!, {
+      stripeAccount: process.env.VITE_STRIPE_ACCOUNT_ID,
+    })
+
+    if (!stripe) {
+      console.log('Stripe is not loaded')
+      return
+    }
+
+    const res = await axios.post('/api/orders/checkout', {
+      products: products,
+    })
+
+    const answer = await stripe.redirectToCheckout({
+      sessionId: res.data.answer.id,
+    })
+
+    if (answer.error) {
+      console.log(answer.error)
+    }
+  }
 
   return (
     <>
@@ -146,7 +170,7 @@ const AppCart = () => {
                   return
                 }
 
-                console.log('Pay by card')
+                makePayment()
               }}
             >
               <CreditCard />

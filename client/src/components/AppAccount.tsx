@@ -1,20 +1,18 @@
-import React from 'react'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
+import { useAuthContext } from '@/contexts/Auth'
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import config from '../config.json'
-import { useAuthContext } from '@/contexts/Auth'
+import React from 'react'
 import axios from '../axios.js'
+import config from '../config.json'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,

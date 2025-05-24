@@ -11,21 +11,21 @@ export default {
     try {
       const lineItems = req.body.products.map((product: IProductCheckout) => ({
         price_data: {
-          currency: product.Currency,
+          currency: product.currency,
           product_data: {
-            name: product.Name,
+            name: product.name,
           },
-          unit_amount: Math.round(product.Price * 100), // bc dollars
+          unit_amount: Math.round(product.price * 100), // bc dollars
         },
-        quantity: product.Quantity,
+        quantity: product.quantity,
       }))
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: lineItems,
         mode: 'payment',
-        success_url: `${config.CLIENT_URL}/success`,
-        cancel_url: `${config.CLIENT_URL}/cancel`,
+        success_url: `${config.CLIENT_URL}/account`,
+        cancel_url: `${config.CLIENT_URL}/fallback`,
       })
 
       res.status(200).json({
