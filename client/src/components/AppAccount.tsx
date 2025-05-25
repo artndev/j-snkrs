@@ -13,6 +13,7 @@ import { Plus } from 'lucide-react'
 import React from 'react'
 import axios from '../axios.js'
 import config from '../config.json'
+import { Link } from 'react-router-dom'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -20,6 +21,7 @@ const AppAccount: React.FC<IAccountProps> = ({
   email,
   googleId,
   githubId,
+  saves,
 }) => {
   const { setAuth } = useAuthContext()
 
@@ -47,7 +49,7 @@ const AppAccount: React.FC<IAccountProps> = ({
 
   return (
     <div className="flex flex-col gap-[20px] w-[min(1000px,_100%)]">
-      <Card className="gap-[10px] w-full h-[max-content]">
+      <Card className="gap-[10px] w-full">
         <CardHeader>
           <CardTitle>Account Info</CardTitle>
           <CardDescription>The description of your personality</CardDescription>
@@ -63,7 +65,7 @@ const AppAccount: React.FC<IAccountProps> = ({
           </ul>
         </CardContent>
       </Card>
-      <Card className="gap-[10px] w-full h-[max-content]">
+      <Card className="gap-[10px] w-full">
         <CardHeader>
           <CardTitle>Socials</CardTitle>
           <CardDescription>
@@ -125,6 +127,33 @@ const AppAccount: React.FC<IAccountProps> = ({
               </div>
             </li>
           </ul>
+        </CardContent>
+      </Card>
+      <Card className="gap-[10px] w-full">
+        <CardHeader>
+          <CardTitle>Saves</CardTitle>
+          <CardDescription>The list of your SNKRS besties</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-[repeat(3,_1fr)]">
+          {!saves?.length ? (
+            <span>There will be some soon..</span>
+          ) : (
+            saves.map((save, i) => {
+              return (
+                <Link
+                  key={i}
+                  to={`/products/${save.Id}`}
+                  className="flex items-center justify-center overflow-hidden"
+                >
+                  <img
+                    src={save.Image}
+                    alt="SaveCover"
+                    className="object-cover w-full"
+                  />
+                </Link>
+              )
+            })
+          )}
         </CardContent>
       </Card>
     </div>

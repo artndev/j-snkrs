@@ -60,4 +60,9 @@ declare global {
   }
 
   export type ICurrency = 'usd' | 'eur'
+
+  export interface ICheck {
+    Id: string
+    UserId: number
+  }
 }

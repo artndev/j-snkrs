@@ -38,25 +38,30 @@ const AppCart = () => {
   // }, [])
 
   const makePayment = async () => {
-    const stripe = await loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY!, {
-      stripeAccount: process.env.VITE_STRIPE_ACCOUNT_ID,
-    })
+    try {
+      const stripe = await loadStripe(
+        process.env.VITE_STRIPE_PUBLISHABLE_KEY!,
+        {
+          stripeAccount: process.env.VITE_STRIPE_ACCOUNT_ID,
+        }
+      )
 
-    if (!stripe) {
-      console.log('Stripe is not loaded')
-      return
-    }
+      if (!stripe) {
+        console.log('Stripe is not loaded')
+        return
+      }
 
-    const res = await axios.post('/api/orders/checkout', {
-      products: products,
-    })
+      const res = await axios.post('/api/orders/checkout', {
+        products: products,
+      })
 
-    const answer = await stripe.redirectToCheckout({
-      sessionId: res.data.answer.id,
-    })
+      const checkout = await stripe.redirectToCheckout({
+        sessionId: res.data.answer.id,
+      })
 
-    if (answer.error) {
-      console.log(answer.error)
+      if (checkout.error) alert(checkout.error.message)
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -74,7 +79,7 @@ const AppCart = () => {
               >
                 <div className="flex flex-col gap-[10px]">
                   <CardHeader className="pr-[0px]">
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center overflow-hidden">
                       <img
                         src={product.image}
                         alt="CardHeader"

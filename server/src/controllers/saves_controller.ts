@@ -74,19 +74,19 @@ export default {
 
       const [rows] = await pool.query<IProduct[]>(
         `
-        SELECT 
-          Products.Id,
-          Products.Name,
-          Products.Price,
-          Products.Currency,
-          Products.Description,
-          Products.Image,
-          Products.Updated,
-          Products.Details,
-          Products.Sizes
-        FROM Products
-        LEFT JOIN Saves ON Products.Id = Saves.ProductId
-        WHERE Saves.UserId = ?;
+          SELECT 
+            Products.Id,
+            Products.Name,
+            Products.Price,
+            Products.Currency,
+            Products.Description,
+            Products.Image,
+            Products.Updated,
+            Products.Details,
+            Products.Sizes
+          FROM Products
+          LEFT JOIN Saves ON Products.Id = Saves.ProductId
+          WHERE Saves.UserId = ?;
         `,
         [userId]
       )
@@ -128,7 +128,7 @@ export default {
 
       res.status(200).json({
         message: 'You have successfully got saves-state of article',
-        answer: rows2.length ? 1 : 0,
+        answer: rows2.length ? true : false,
       })
     } catch (err) {
       console.log(err)

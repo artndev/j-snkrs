@@ -35,5 +35,10 @@ declare global {
     email: string | undefined
     googleId: string | undefined
     githubId: string | undefined
+    saves: IProduct[] | undefined
+  }
+
+  export interface IHistoryProps {
+    history: ICheck[]
   }
 }

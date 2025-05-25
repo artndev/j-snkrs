@@ -11,6 +11,7 @@ import Cart from './routes/Cart'
 import IsNotCartEmpty from './outlets/IsNotCartEmpty'
 import IsLogged from './outlets/IsLogged'
 import Account from './routes/Account'
+import History from './routes/History'
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
 
           {/* <Route path="/account" element={<Account />} /> */}
           <Route path="/account" element={<Account />} />
+          <Route path="/history" element={<History />} />
 
           <Route element={<IsNotCartEmpty />}>
             <Route path="/cart" element={<Cart />} />

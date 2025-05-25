@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { addProduct, removeProduct } from '@/pizza_slices/Cart'
-import { Circle, CircleCheck, Heart, Minus, Plus } from 'lucide-react'
+import { Circle, CircleCheck, Heart, HeartOff, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -30,6 +30,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   const colors: string[] = Object.keys(sizes)
   const [variant, setVariant] = useState<IVariant | undefined>(undefined)
   const [color, setColor] = useState<string | undefined>(undefined)
+  const [isSaved, setIsSaved] = useState<boolean>(false)
 
   const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()
@@ -46,13 +47,53 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
     })
   }, [])
 
+  useEffect(() => {
+    try {
+      axios
+        .get(`/api/saves/${id}/state`)
+        .then(res => {
+          setIsSaved(res.data.answer)
+          console.log(res)
+        })
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
+
+  const saveProduct = () => {
+    try {
+      axios
+        .post(`/api/saves/${id}/save`)
+        .then(() => setIsSaved(true))
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const unsaveProduct = () => {
+    try {
+      axios
+        .post(`/api/saves/${id}/unsave`)
+        .then(() => setIsSaved(false))
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   // useEffect(() => {
   //   console.log(color, variant)
   // }, [color, variant])
 
+  // useEffect(() => {
+  //   console.log(isSaved)
+  // }, [isSaved])
+
   return (
     <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
-      <Card className="flex justify-center items-center max-h-[500px]">
+      <Card className="flex justify-center items-center max-h-[500px] overflow-hidden">
         <img src={image} alt="CardHeader" className="object-cover w-full" />
       </Card>
       <Card className="gap-[10px]">
@@ -121,8 +162,18 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
             </div>
           )}
           <div className="flex gap-[5px] w-full">
-            <Button size={'icon'}>
-              <Heart />
+            <Button
+              size={'icon'}
+              onClick={() => {
+                if (isSaved) {
+                  unsaveProduct()
+                  return
+                }
+
+                saveProduct()
+              }}
+            >
+              {!isSaved ? <Heart /> : <HeartOff />}
             </Button>
             {products[id]?.[JSON.stringify(variant)] && (
               <Button

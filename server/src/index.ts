@@ -43,7 +43,7 @@ app.use(
       path: '/',
       httpOnly: true,
       secure: false, // true
-      sameSite: 'strict',
+      sameSite: 'lax', // for stripe redirects
     },
   })
 )

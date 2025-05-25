@@ -18,6 +18,7 @@ import {
 import { useAuthContext } from '@/contexts/Auth'
 import {
   ChevronUp,
+  History,
   Home,
   ShoppingBag,
   ShoppingBasket,
@@ -31,6 +32,11 @@ const items = [
     title: 'Home',
     url: '/',
     icon: Home,
+  },
+  {
+    title: 'History',
+    url: '/history',
+    icon: History,
   },
   {
     title: 'Products',

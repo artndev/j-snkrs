@@ -1,0 +1,6 @@
+CREATE TABLE Checks (
+    Id VARCHAR(255) NOT NULL,
+    UserId INT NOT NULL,
+    PRIMARY KEY(Id, UserId),
+    CONSTRAINT UserIdFK_3 FOREIGN KEY(UserId) REFERENCES Users(Id)
+);
