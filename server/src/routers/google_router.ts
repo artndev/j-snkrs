@@ -2,7 +2,7 @@ import express from 'express'
 import passport from 'passport'
 import config from '../config.json' with { type: 'json' }
 import { usersController } from '../controllers/_controllers.js'
-import { isAuthenticated } from '../middlewares.js'
+import * as middlewares from '../middlewares.js'
 
 const router = express.Router()
 
@@ -32,6 +32,10 @@ router.get('/callback', (req, res, next) => {
   )(req, res, next)
 })
 
-router.post('/unattach', isAuthenticated, usersController.UnattachGoogleId)
+router.post(
+  '/unattach',
+  middlewares.isAuthenticated,
+  usersController.UnattachGoogleId
+)
 
 export default router

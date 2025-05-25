@@ -5,6 +5,11 @@ import { Request, Response } from 'express'
 export default {
   Delete: async (req: Request, res: Response) => {
     try {
+      await pool.query<ResultSetHeader>(
+        'DELETE FROM Saves WHERE ProductId = ?;',
+        [req.params.id]
+      )
+
       const [rows] = await pool.query<ResultSetHeader>(
         'DELETE FROM Products WHERE Id = ?;',
         [req.params.id]

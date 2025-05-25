@@ -1,13 +1,8 @@
 import express from 'express'
 import { ordersController } from '../controllers/_controllers.js'
-import { isAuthenticated } from '../middlewares.js'
 
 const router = express.Router()
 
-router.post(
-  '/checkout',
-  isAuthenticated,
-  ordersController.createCheckoutSession
-)
+router.post('/checkout', ordersController.createCheckoutSession)
 
 export default router

@@ -12,6 +12,18 @@ declare global {
     Created: string
   }
 
+  export interface IProduct {
+    Id: number
+    Name: string
+    Price: number
+    Currency: ICurrency
+    Description: string
+    Details: string
+    Sizes: string
+    Image: string
+    Updated: string
+  }
+
   export interface IAuthContext {
     auth: IUser | undefined
     setAuth: (auth: IUser | undefined) => void | undefined

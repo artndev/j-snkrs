@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import config from '../config.json'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/ProductFront.css'
+import axios from '../axios.js'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,
@@ -32,10 +33,6 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
 
   const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()
-
-  // useEffect(() => {
-  //   console.log(products)
-  // }, [products])
 
   useEffect(() => {
     const key = 0

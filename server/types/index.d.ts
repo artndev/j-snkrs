@@ -7,6 +7,10 @@ declare global {
     Name: string
     Price: number
     Currency: string
+    Description: string
+    Image: string
+    Details: string
+    Sizes: string
     Updated: string
   }
 
@@ -48,5 +52,10 @@ declare global {
     username: string
     password: string
     email: string
+  }
+
+  export interface ISave extends ResultSetHeader {
+    ProductId: number
+    UserId: number
   }
 }

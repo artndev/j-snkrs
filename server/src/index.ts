@@ -59,7 +59,8 @@ passport.deserializeUser((user: Express.User, done) => {
 })
 
 app.use('/api/products', routers.productsRouter)
-app.use('/api/orders', routers.ordersRouter)
+app.use('/api/orders', middlewares.isAuthenticated, routers.ordersRouter)
+app.use('/api/saves', middlewares.isAuthenticated, routers.savesRouter)
 
 app.use('/api/local', middlewares.isNotAuthenticated, routers.localRouter)
 app.use('/api/google', routers.googleRouter)
@@ -94,4 +95,6 @@ app.get('/*', (_req, res) => {
 })
 
 const port = config.SERVER_PORT
-app.listen(port, () => console.log(`Server listening on port ${port}`))
+app.listen(port, () =>
+  console.log(`Server listening on port ${port}\nhttp://localhost:${port}`)
+)

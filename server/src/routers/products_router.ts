@@ -1,6 +1,6 @@
 import express from 'express'
 import { productsController } from '../controllers/_controllers.js'
-import { isAuthenticated } from '../middlewares.js'
+import * as middlewares from '../middlewares.js'
 
 const router = express.Router()
 
@@ -8,10 +8,18 @@ router.get('/', productsController.GetAll)
 
 router.get('/:id', productsController.Get)
 
-router.post('/create', isAuthenticated, productsController.Create)
+router.post('/create', middlewares.isAuthenticated, productsController.Create)
 
-router.put('/:id/update', isAuthenticated, productsController.Update)
+router.put(
+  '/:id/update',
+  middlewares.isAuthenticated,
+  productsController.Update
+)
 
-router.delete('/:id/delete', isAuthenticated, productsController.Delete)
+router.delete(
+  '/:id/delete',
+  middlewares.isAuthenticated,
+  productsController.Delete
+)
 
 export default router
