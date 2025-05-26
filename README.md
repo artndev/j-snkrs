@@ -1,4 +1,4 @@
-> J-SNKRS — yours way into sneakers!
+> J-SNKRS — yours way into sneakers! Custom Nike SNKRS from JAPAN
 
 You can find there the source code of sneakers store. It includes:
 
@@ -7,7 +7,7 @@ You can find there the source code of sneakers store. It includes:
 - The cart system built using Redux reducers and selectors
 - The authorization system based on [Passport-Local Strategy](https://github.com/jaredhanson/passport-local), [Passport-Google-OAuth2 Strategy](https://github.com/jaredhanson/passport-google-oauth2) with [Passport-Github-OAuth2 Strategy](https://github.com/cfsghost/passport-github) and JWT; the implementation of social networks attaching.
 
-P.S.: Deployed on Vercel.
+P.S.: Deployed on Vercel 🛠️
 
 ## Tech Stack
 
