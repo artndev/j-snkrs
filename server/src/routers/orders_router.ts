@@ -15,7 +15,7 @@ router.get('/success', ordersController.createCheck, (_req, res) => {
         <script>
           setTimeout(function() {
             window.location.href = "${config.CLIENT_URL}/history";
-          }, 5000);
+          }, 3000);
         </script>
       </head>
       <body>
@@ -32,7 +32,7 @@ router.get('/cancel', (_req, res) => {
         <script>
           setTimeout(function() {
             window.location.href = "${config.CLIENT_URL}/products";
-          }, 5000);
+          }, 3000);
         </script>
       </head>
       <body>
