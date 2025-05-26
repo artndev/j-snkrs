@@ -1,4 +1,11 @@
-You can find there the advanced authorization system created mainly using React / Express and based on [Passport-Local Strategy](https://github.com/jaredhanson/passport-local), [Passport-Google-OAuth2 Strategy](https://github.com/jaredhanson/passport-google-oauth2) with [Passport-Github-OAuth2 Strategy](https://github.com/cfsghost/passport-github).
+> J-SNKRS — yours way into sneakers!
+
+You can find there the source code of sneakers store. It includes:
+
+- The basic manipulation of products and favorites of each user
+- The payment system based on [Stripe](https://github.com/stripe/stripe-node)
+- The cart system built using Redux reducers and selectors
+- The authorization system based on [Passport-Local Strategy](https://github.com/jaredhanson/passport-local), [Passport-Google-OAuth2 Strategy](https://github.com/jaredhanson/passport-google-oauth2) with [Passport-Github-OAuth2 Strategy](https://github.com/cfsghost/passport-github) and JWT; the implementation of social networks attaching.
 
 P.S.: Deployed on Vercel.
 
@@ -19,4 +26,3 @@ P.S.: Deployed on Vercel.
 <img src="./assets/express.svg" width=50 />&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="./assets/redis.svg" width=50 />&nbsp;&nbsp;&nbsp;
 <img src="./assets/mysql.svg" width=50 />&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="./assets/vercel.svg" width=50 />&nbsp;&nbsp;&nbsp;&nbsp;
