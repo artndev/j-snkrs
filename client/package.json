@@ -33,6 +33,7 @@
     "dotenv": "^16.5.0",
     "lucide-react": "^0.511.0",
     "next-themes": "^0.4.6",
+    "passport-multiple-vite": "file:..",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.4",
