@@ -1,3 +1,6 @@
 npm list lightningcss
 npm dedupe
 npm rebuild lightningcss
+
+// Error: Cannot find module '../lightningcss.linux-x64-gnu.node'
+rm -rf node_modules package-lock.json && npm i
