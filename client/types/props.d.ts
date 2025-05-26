@@ -4,9 +4,20 @@ declare global {
   export interface IAuthFormProps {
     formTitle: string
     onSubmit: (...args) => void
-    err: IAxiosErrorResponse
+    err: boolean
     withEmail?: boolean
     withSocials?: boolean
+  }
+
+  export interface IProductFrontProps {
+    id: number
+    name: string
+    price: number
+    currency: ICurrency
+    description: string
+    details: string
+    sizes: Dictionary<ISize[]>
+    image: string
   }
 
   export interface IProductBackProps {
@@ -18,15 +29,8 @@ declare global {
     image: string
   }
 
-  export interface IProductFrontProps {
-    id: number
-    name: string
-    price: number
-    currency: ICurrency
-    description: string
-    details: string
-    sizes: Dictionary<{ M: string; W: string }[]>
-    image: string
+  export interface IHistoryProps {
+    history: ICheck[]
   }
 
   export interface IAccountProps {
@@ -36,9 +40,5 @@ declare global {
     googleId: string | undefined
     githubId: string | undefined
     saves: IProduct[] | undefined
-  }
-
-  export interface IHistoryProps {
-    history: ICheck[]
   }
 }

@@ -1,11 +1,11 @@
 import AppProductBack from '@/components/AppProductBack'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from '../axios.js'
 import '../styles/css/Products.css'
-import axios from '../axios'
 
 const Products = () => {
   const [products, setProducts] = useState<IProduct[] | undefined>(undefined)
-  const [err, setErr] = useState<IAxiosErrorResponse>(undefined)
+  const [err, setErr] = useState<boolean>(false)
 
   useEffect(() => {
     axios
@@ -14,13 +14,15 @@ const Products = () => {
       .catch(err => {
         console.log(err)
 
-        setErr(err.response)
+        setErr(true)
       })
   }, [])
 
   return (
     <>
-      {products ? (
+      {!products?.length || err ? (
+        <div className="flex justify-center p-[20px]">Loading...</div>
+      ) : (
         <div className="products__container grid grid-cols-[repeat(3,_1fr)] grid-rows-[max-content] gap-[20px] p-[20px]">
           {products.map((product, i) => {
             return (
@@ -36,8 +38,6 @@ const Products = () => {
             )
           })}
         </div>
-      ) : (
-        <div className="flex justify-center p-[20px]">Loading...</div>
       )}
     </>
   )

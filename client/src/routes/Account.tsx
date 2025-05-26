@@ -1,6 +1,6 @@
 import AppAccount from '@/components/AppAccount'
 import { useAuthContext } from '@/contexts/Auth'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from '../axios.js'
 
 const Account = () => {

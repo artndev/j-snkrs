@@ -1,5 +1,5 @@
 export {}
-import { storeConfig } from './src/storeConfig'
+import { storeConfig } from '../src/reduxConfig.js'
 
 declare global {
   export type RootState = ReturnType<typeof storeConfig.getState>

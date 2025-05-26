@@ -12,10 +12,10 @@ import { Circle, CircleCheck, Heart, HeartOff, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
+import axios from '../axios.js'
 import config from '../config.json'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/ProductFront.css'
-import axios from '../axios.js'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,
@@ -82,14 +82,6 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
       console.log(err)
     }
   }
-
-  // useEffect(() => {
-  //   console.log(color, variant)
-  // }, [color, variant])
-
-  // useEffect(() => {
-  //   console.log(isSaved)
-  // }, [isSaved])
 
   return (
     <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
@@ -180,7 +172,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 size={'icon'}
                 onClick={() => {
                   const totalQuantity =
-                    products[id]?.[JSON.stringify(variant)]?.quantity - 1 || 0
+                    (products[id]?.[JSON.stringify(variant)]?.quantity || 1) - 1
                   dispatch(
                     removeProduct({
                       id: id,
@@ -208,7 +200,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
               className="flex-1"
               onClick={() => {
                 const totalQuantity =
-                  products[id]?.[JSON.stringify(variant)]?.quantity + 1 || 1
+                  (products[id]?.[JSON.stringify(variant)]?.quantity || 0) + 1
                 dispatch(
                   addProduct({
                     id: id,
@@ -240,7 +232,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
             </Button>
           </div>
           <Link className="text-muted hover:underline" to={'/cart'}>
-            Go to my cart
+            Go to cart
           </Link>
         </CardFooter>
       </Card>

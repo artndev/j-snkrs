@@ -1,9 +1,13 @@
 export {}
-import { AxiosResponse } from 'axios'
 
 declare global {
+  export interface IAuthContext {
+    auth: IUser | undefined
+    setAuth: (auth: IUser | undefined) => void | undefined
+  }
+
   export interface IUser {
-    Id?: number
+    Id: number
     Username: string
     Password: string
     Email: string
@@ -24,33 +28,16 @@ declare global {
     Updated: string
   }
 
-  export interface IAuthContext {
-    auth: IUser | undefined
-    setAuth: (auth: IUser | undefined) => void | undefined
-  }
-
   export interface IAuthFormData {
     username: string
     password: string
     email?: string
   }
 
-  export type IAxiosErrorResponse = AxiosResponse | undefined
-
-  export interface Dictionary<T> {
-    [Key: string]: T
-  }
-
-  export interface ISize {
-    size: {
-      M: string
-      W: string
-    }
-  }
-
-  export interface IVariant extends ISize {
+  export interface IVariant {
     key: number
     color: string
+    size: ISize
   }
 
   export interface ICart extends IProductBackProps {
@@ -59,10 +46,25 @@ declare global {
     quantity: number
   }
 
-  export type ICurrency = 'usd' | 'eur'
-
   export interface ICheck {
-    Id: string
+    ReferenceId: string
+    LineItems: string
+    totalPrice: string
     UserId: number
+  }
+
+  export interface ILineItem {
+    price_data: {
+      currency: ICurrency
+      product_data: {
+        name: string
+        images: string[]
+        metadata: {
+          id: number
+        }
+      }
+      unit_amount: number
+    }
+    quantity: number
   }
 }

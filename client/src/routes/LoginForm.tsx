@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from '../axios'
-import { useAuthContext } from '../contexts/Auth'
 import AppAuthForm from '@/components/AppAuthForm'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from '../axios.js'
+import { useAuthContext } from '../contexts/Auth'
 
 const LoginForm = () => {
   const { setAuth } = useAuthContext()
   const navigator = useNavigate()
-  const [err, setErr] = useState<IAxiosErrorResponse>(undefined)
+  const [err, setErr] = useState<boolean>(false)
 
   const onSubmit = (data: IAuthFormData) => {
     try {
@@ -23,7 +23,7 @@ const LoginForm = () => {
         .catch(err => {
           console.log(err)
 
-          setErr(err.response)
+          setErr(true)
         })
     } catch (err) {
       console.log(err)

@@ -43,11 +43,6 @@ const items = [
     url: '/products',
     icon: ShoppingBag,
   },
-  // {
-  //   title: 'History',
-  //   url: '#',
-  //   icon: History,
-  // },
   {
     title: 'Cart',
     url: '/cart',

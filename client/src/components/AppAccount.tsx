@@ -11,9 +11,9 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Plus } from 'lucide-react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
-import { Link } from 'react-router-dom'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,

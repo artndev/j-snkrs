@@ -1,9 +1,10 @@
 import AppHistory from '@/components/AppHistory'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from '../axios.js'
 
 const History = () => {
   const [history, setHistory] = useState<ICheck[] | undefined>(undefined)
+  const [err, setErr] = useState<boolean>(false)
 
   useEffect(() => {
     try {
@@ -13,13 +14,21 @@ const History = () => {
         .catch(err => console.log(err))
     } catch (err) {
       console.log(err)
+
+      setErr(true)
     }
   }, [])
 
   return (
-    <div className="flex justify-center h-screen p-[20px]">
-      {history ? <AppHistory history={history} /> : 'Loading...'}
-    </div>
+    <>
+      {!history?.length || err ? (
+        <div className="flex justify-center p-[20px]">Loading...</div>
+      ) : (
+        <div className="flex justify-center h-screen p-[20px]">
+          <AppHistory history={history} />
+        </div>
+      )}
+    </>
   )
 }
 

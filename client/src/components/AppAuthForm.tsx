@@ -30,9 +30,11 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-[20px] max-w-[300px] w-[100%]"
+        className="flex flex-col gap-[20px] w-[min(350px,_100%)]"
       >
-        <span className="text-xl font-bold mb-[10px]">{formTitle}</span>
+        <span className="leading-none text-xl font-bold mb-[10px]">
+          {formTitle}
+        </span>
         {err && (
           <span className="italic text-red-500">
             This username has already been taken or your credentials are
@@ -43,7 +45,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem className="w-[100%]">
+            <FormItem>
               <FormLabel>Username</FormLabel>
               <FormDescription>
                 Cannot be started with a digit. Must contain 5 to 20 characters
@@ -51,7 +53,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
               </FormDescription>
               <FormControl>
                 <Input
-                  //pattern="^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$"
+                  pattern="^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$"
                   placeholder="Enter your username.."
                   required
                   {...field}
@@ -65,7 +67,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem className="w-[100%]">
+            <FormItem>
               <FormLabel>Password</FormLabel>
               <FormDescription>
                 Must contain 5 to 20 characters without spaces:{' '}
@@ -75,7 +77,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                 <FormControl>
                   <Input
                     type={inputType}
-                    //pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_.!@#$%^&*])[a-zA-Z0-9_.!@#$%^&*]{5,20}$"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_.!@#$%^&*])[a-zA-Z0-9_.!@#$%^&*]{5,20}$"
                     placeholder="Enter your password.."
                     required
                     {...field}
@@ -109,7 +111,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="w-[100%]">
+              <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
@@ -150,7 +152,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
             </div>
           </>
         )}
-        <Button className="w-full self-center mt-[10px]" type="submit">
+        <Button className="w-full mt-[10px]" type="submit">
           Submit
         </Button>
       </form>

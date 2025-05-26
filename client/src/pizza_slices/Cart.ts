@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import config from '../config.json' with { type: 'json' }
 
 const initialState: IInitialState = {
@@ -64,14 +64,6 @@ export const cartSlice = createSlice({
 
       return products
     },
-    getProductsAmount: state => {
-      let idsAmount = 0
-      Object.keys(state.products).forEach(id => {
-        idsAmount += Object.keys(state.products[id] || {}).length
-      })
-
-      return idsAmount
-    },
     getTotalPrice: state => {
       return `${state.totalPrice}${config.currencyCodes[state.globalCurrency]}`
     },
@@ -79,7 +71,6 @@ export const cartSlice = createSlice({
 })
 
 export const { addProduct, removeProduct } = cartSlice.actions
-export const { getTotalPrice, getProductsAmount, getProducts } =
-  cartSlice.selectors
+export const { getTotalPrice, getProducts } = cartSlice.selectors
 
 export default cartSlice.reducer

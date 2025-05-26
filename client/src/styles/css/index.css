@@ -18,6 +18,10 @@
   @apply text-muted-foreground text-sm;
 }
 
+*[data-slot='card-header'] {
+  gap: 5px !important;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
