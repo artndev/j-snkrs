@@ -1,5 +1,11 @@
+import AppHome from '@/components/AppHome'
+
 const Home = () => {
-  return <h3>Home</h3>
+  return (
+    <div className="flex justify-center items-center h-screen p-[20px]">
+      <AppHome />
+    </div>
+  )
 }
 
 export default Home
