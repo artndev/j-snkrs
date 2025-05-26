@@ -1,9 +1,10 @@
 export {}
+import { JwtPayload } from 'jsonwebtoken'
 import { ResultSetHeader } from 'mysql2'
 
 declare global {
   export interface IProduct extends ResultSetHeader {
-    Id?: number
+    Id: number
     Name: string
     Price: number
     Currency: string
@@ -15,7 +16,7 @@ declare global {
   }
 
   export interface IProductCheckout {
-    currency: 'usd' | 'eur'
+    currency: ICurrency
     description: string
     id: number
     image: string
@@ -27,10 +28,7 @@ declare global {
     variant: {
       key: number
       color: string
-      size: {
-        M: string
-        W: string
-      }
+      size: ISize
     }
   }
 
@@ -44,10 +42,6 @@ declare global {
     Created: string
   }
 
-  namespace Express {
-    interface User extends IUser {}
-  }
-
   export interface ICredentials {
     username: string
     password: string
@@ -57,5 +51,12 @@ declare global {
   export interface ISave extends ResultSetHeader {
     ProductId: number
     UserId: number
+  }
+
+  export interface IJwtPayload extends JwtPayload {
+    jti: string
+    referenceId: string
+    lineItems: string
+    totalPrice: string
   }
 }

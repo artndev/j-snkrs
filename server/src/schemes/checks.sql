@@ -1,6 +1,8 @@
 CREATE TABLE Checks (
-    Id VARCHAR(255) NOT NULL,
+    ReferenceId VARCHAR(255) NOT NULL,
+    LineItems TEXT NOT NULL,
+    TotalPrice VARCHAR(50) NOT NULL,
     UserId INT NOT NULL,
-    PRIMARY KEY(Id, UserId),
+    PRIMARY KEY(ReferenceId, UserId),
     CONSTRAINT UserIdFK_3 FOREIGN KEY(UserId) REFERENCES Users(Id)
 );

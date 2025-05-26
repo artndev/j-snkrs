@@ -1,17 +1,16 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import IsNotCartEmpty from './outlets/IsNotCartEmpty'
 import IsNotLogged from './outlets/isNotLogged'
+import Layout from './outlets/Layout'
+import Account from './routes/Account'
+import Cart from './routes/Cart'
+import Fallback from './routes/Fallback'
+import History from './routes/History'
 import Home from './routes/Home'
 import LoginForm from './routes/LoginForm'
-import RegisterForm from './routes/RegisterForm'
-import Fallback from './routes/Fallback'
-import Layout from './outlets/Layout'
-import Products from './routes/Products'
 import Product from './routes/Product'
-import Cart from './routes/Cart'
-import IsNotCartEmpty from './outlets/IsNotCartEmpty'
-import IsLogged from './outlets/IsLogged'
-import Account from './routes/Account'
-import History from './routes/History'
+import Products from './routes/Products'
+import RegisterForm from './routes/RegisterForm'
 
 const App = () => {
   return (
@@ -25,18 +24,18 @@ const App = () => {
             <Route path="/register" element={<RegisterForm />} />
           </Route>
 
-          {/* <Route path="/account" element={<Account />} /> */}
-          <Route path="/account" element={<Account />} />
-          <Route path="/history" element={<History />} />
-
           <Route element={<IsNotCartEmpty />}>
             <Route path="/cart" element={<Cart />} />
           </Route>
+
+          <Route path="/account" element={<Account />} />
+          <Route path="/history" element={<History />} />
+
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Product />} />
 
           <Route path="/fallback" element={<Fallback />} />
-          <Route path="*" element={<h3>Blank page</h3>} />
+          <Route path="/*" element={<Navigate to={'/fallback'} />} />
         </Route>
       </Routes>
     </BrowserRouter>

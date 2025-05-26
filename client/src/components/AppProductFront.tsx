@@ -84,7 +84,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   }
 
   return (
-    <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
+    <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[10px] w-[min(1000px,_100%)]">
       <Card className="flex justify-center items-center max-h-[500px] overflow-hidden">
         <img src={image} alt="CardHeader" className="object-cover w-full" />
       </Card>

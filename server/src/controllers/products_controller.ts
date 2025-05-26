@@ -1,6 +1,6 @@
+import { Request, Response } from 'express'
 import type { ResultSetHeader } from 'mysql2'
 import pool from '../pool.js'
-import { Request, Response } from 'express'
 
 export default {
   Delete: async (req: Request, res: Response) => {

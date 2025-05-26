@@ -1,8 +1,8 @@
 import express from 'express'
 import passport from 'passport'
 import config from '../config.json' with { type: 'json' }
-import * as middlewares from '../middlewares.js'
 import { usersController } from '../controllers/_controllers.js'
+import * as middlewares from '../middlewares.js'
 
 const router = express.Router()
 

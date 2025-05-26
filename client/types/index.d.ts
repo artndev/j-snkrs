@@ -49,7 +49,7 @@ declare global {
   export interface ICheck {
     ReferenceId: string
     LineItems: string
-    totalPrice: string
+    TotalPrice: string
     UserId: number
   }
 

@@ -30,7 +30,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-[20px] w-[min(350px,_100%)]"
+        className="flex flex-col gap-[10px] w-[min(350px,_100%)]"
       >
         <span className="leading-none text-xl font-bold mb-[10px]">
           {formTitle}
@@ -129,7 +129,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
         {withSocials && (
           <>
             <span className="self-center">Or</span>
-            <div className="flex items-center gap-[10px]">
+            <div className="flex items-center gap-[5px]">
               <a
                 className="flex-1"
                 href={`${config.SERVER_URL}/api/google/login`}

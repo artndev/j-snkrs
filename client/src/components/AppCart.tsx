@@ -60,13 +60,13 @@ const AppCart = () => {
   }
 
   return (
-    <div className="cart__subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[20px] w-[min(1000px,_100%)]">
+    <div className="cart__subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[10px] w-[min(1000px,_100%)]">
       <div className="flex flex-col gap-[10px] max-h-[500px] overflow-y-auto">
         {products.map((product, i) => {
           return (
             <Card
               key={i}
-              className="grid grid-cols-[repeat(2,_1fr)] grid-rows-[max-content] gap-[10px]"
+              className="grid grid-cols-[repeat(2,_1fr)] grid-rows-[max-content] gap-[5px]"
             >
               <div className="flex flex-col gap-[10px]">
                 <CardHeader className="pr-[0px]">
@@ -150,7 +150,6 @@ const AppCart = () => {
           )
         })}
       </div>
-
       <Card className="cart__checkout gap-[10px]">
         <CardHeader>
           <CardTitle>Checkout</CardTitle>
