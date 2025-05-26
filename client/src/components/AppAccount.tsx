@@ -136,7 +136,7 @@ const AppAccount: React.FC<IAccountProps> = ({
         </CardHeader>
         <CardContent className="grid grid-cols-[repeat(3,_1fr)]">
           {!saves?.length ? (
-            <span>There will be some soon..</span>
+            <span>Loading...</span>
           ) : (
             saves.map((save, i) => {
               return (
