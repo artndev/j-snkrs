@@ -21,11 +21,11 @@ import axios from '../axios.js'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/Cart.css'
 import { Button } from './ui/button'
+import { useEffect } from 'react'
 
 const AppCart = () => {
   const navigate = useNavigate()
   const { auth } = useAuthContext()
-
   const totalPrice = useReduxSelector(getTotalPrice)
   const products = useReduxSelector(getProducts)
   const dispatch = useReduxDispatch()
@@ -70,11 +70,11 @@ const AppCart = () => {
             >
               <div className="flex flex-col gap-[10px]">
                 <CardHeader className="pr-[0px]">
-                  <div className="flex justify-center items-center overflow-hidden">
+                  <div className="overflow-hidden">
                     <img
-                      src={product.image}
+                      src={product.variant.image}
                       alt="CardHeader"
-                      className="object-cover w-full"
+                      className="object-cover w-full rounded-xl"
                     />
                   </div>
                   <CardTitle>{product.name}</CardTitle>
@@ -88,9 +88,7 @@ const AppCart = () => {
               <div>
                 <CardFooter className="flex flex-col items-start gap-[5px] pl-[0px]">
                   <span className="text-muted mb-[10px]">
-                    {product.variant.color.charAt(0).toUpperCase() +
-                      product.variant.color.slice(1)}{' '}
-                    • M {product.variant.size.M} / W {product.variant.size.W}
+                    {product.variant.color} • {product.variant.size}
                   </span>
                   <Button
                     className="flex justify-between items-center w-full"
@@ -100,8 +98,7 @@ const AppCart = () => {
                       dispatch(addProduct(product))
 
                       toast(
-                        `'${product.name} • ${product.variant.color.charAt(0).toUpperCase() + product.variant.color.slice(1)} • 
-                            M ${product.variant.size.M} / W ${product.variant.size.W}' has been added to your cart`,
+                        `'${product.name} • ${product.variant.color} • ${product.variant.size}' has been added to your cart`,
                         {
                           description: (
                             <span className="text-muted-foreground">
@@ -128,9 +125,7 @@ const AppCart = () => {
                       )
 
                       toast(
-                        `
-                            '${product.name} • ${product.variant.color.charAt(0).toUpperCase() + product.variant.color.slice(1)} • 
-                            M ${product.variant.size.M} / W ${product.variant.size.W}' has been removed from your cart`,
+                        `'${product.name} • ${product.variant.color} • ${product.variant.size}' has been removed from your cart`,
                         {
                           description: totalQuantity > 0 && (
                             <span className="text-muted-foreground">

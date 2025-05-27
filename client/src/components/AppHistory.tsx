@@ -15,7 +15,7 @@ const AppHistory: React.FC<IHistoryProps> = ({ history }) => {
         <h3 className="leading-none font-semibold">History</h3>
         <span className="text-muted">The history of your transactions</span>
       </div>
-      <div className="flex flex-col gap-[5px] max-h-[500px] overflow-y-auto">
+      <div className="flex-1 flex flex-col gap-[5px] overflow-y-auto">
         {history.map((check, i) => {
           return (
             <Card key={i} className="gap-[10px] w-full">

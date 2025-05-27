@@ -6,8 +6,8 @@ declare global {
   }
 
   export type ISize = {
-    M: string
-    W: string
+    sizes: string[]
+    image: string
   }
 
   export type ICurrency = 'usd' | 'eur'

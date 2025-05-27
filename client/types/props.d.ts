@@ -16,7 +16,7 @@ declare global {
     currency: ICurrency
     description: string
     details: string
-    sizes: Dictionary<ISize[]>
+    sizes: Dictionary<ISize>
     image: string
   }
 

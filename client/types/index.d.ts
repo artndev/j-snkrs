@@ -35,9 +35,9 @@ declare global {
   }
 
   export interface IVariant {
-    key: number
     color: string
-    size: ISize
+    size: string
+    image: string
   }
 
   export interface ICart extends IProductBackProps {

@@ -19,7 +19,7 @@ export default {
           product_data: {
             name: `${product.name} • ${product.variant.color.charAt(0).toUpperCase() + product.variant.color.slice(1)} • 
             M ${product.variant.size.M} / W ${product.variant.size.W}`,
-            images: [product.image],
+            images: [product.variant.image],
             metadata: {
               id: product.id,
             },

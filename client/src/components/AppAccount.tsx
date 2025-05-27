@@ -134,7 +134,7 @@ const AppAccount: React.FC<IAccountProps> = ({
           <CardTitle>Saves</CardTitle>
           <CardDescription>The list of your SNKRS besties</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-[repeat(3,_1fr)]">
+        <CardContent className="grid grid-cols-[repeat(3,_1fr)] gap-[10px]">
           {!saves?.length ? (
             <span>Loading...</span>
           ) : (
@@ -143,12 +143,12 @@ const AppAccount: React.FC<IAccountProps> = ({
                 <Link
                   key={i}
                   to={`/products/${save.Id}`}
-                  className="flex items-center justify-center overflow-hidden"
+                  className="overflow-hidden"
                 >
                   <img
                     src={save.Image}
                     alt="SaveCover"
-                    className="object-cover w-full"
+                    className="object-cover w-full rounded-xl"
                   />
                 </Link>
               )

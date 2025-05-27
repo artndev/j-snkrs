@@ -10,12 +10,13 @@ import {
 import { addProduct, removeProduct } from '@/pizza_slices/Cart'
 import { Circle, CircleCheck, Heart, HeartOff, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from '../axios.js'
 import config from '../config.json'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/ProductFront.css'
+import { useAuthContext } from '@/contexts/Auth.js'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,
@@ -27,11 +28,13 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   sizes,
   image,
 }) => {
+  const navigate = useNavigate()
   const colors: string[] = Object.keys(sizes)
+  const { auth } = useAuthContext()
   const [variant, setVariant] = useState<IVariant | undefined>(undefined)
   const [color, setColor] = useState<string | undefined>(undefined)
+  const [colorImage, setColorImage] = useState<string | undefined>(undefined)
   const [isSaved, setIsSaved] = useState<boolean>(false)
-
   const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()
 
@@ -40,12 +43,20 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
     if (!colors.length) return
 
     setColor(colors[key])
+
+    const size = sizes[colors[key]!]!
     setVariant({
-      key: key,
-      size: sizes[colors[key]!]![key]!,
+      size: size.sizes[key]!,
+      image: size.image,
       color: colors[key]!,
     })
   }, [])
+
+  useEffect(() => {
+    if (!color) return
+
+    setColorImage(sizes[color]!.image)
+  }, [color])
 
   useEffect(() => {
     try {
@@ -85,8 +96,14 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
 
   return (
     <div className="product__front-subcontainer grid grid-cols-[repeat(2_,1fr)] grid-rows-[max-content] gap-[10px] w-[min(1000px,_100%)]">
-      <Card className="flex justify-center items-center max-h-[500px] overflow-hidden">
-        <img src={image} alt="CardHeader" className="object-cover w-full" />
+      <Card className="overflow-hidden">
+        <CardContent>
+          <img
+            src={colorImage || image}
+            alt="CardHeader"
+            className="object-cover w-full rounded-xl"
+          />
+        </CardContent>
       </Card>
       <Card className="gap-[10px]">
         <CardHeader>
@@ -113,7 +130,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                       setColor(val)
                     }}
                   >
-                    {val.charAt(0).toUpperCase() + val.slice(1)}
+                    <span>{val}</span>
                     {color !== val ? <Circle /> : <CircleCheck />}
                   </Button>
                 )
@@ -122,28 +139,26 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
           )}
           {color && variant && (
             <div className="flex flex-col gap-[5px] w-full">
-              {sizes[color]!.map((val, i) => {
+              {sizes[color]!.sizes.map((val, i) => {
                 return (
                   <Button
                     key={i}
                     className="flex justify-between items-center"
                     variant={'ghost'}
                     onClick={() => {
-                      if (variant.key === i && variant.color === color) {
+                      if (variant.size === val && variant.color === color) {
                         return
                       }
 
                       setVariant({
-                        key: i,
                         size: val,
                         color: color,
+                        image: sizes[color]!.image,
                       })
                     }}
                   >
-                    <span>
-                      M {val.M} / W {val.W}
-                    </span>
-                    {i !== variant.key || color !== variant.color ? (
+                    <span>{val}</span>
+                    {variant.size !== val || variant.color !== color ? (
                       <Circle />
                     ) : (
                       <CircleCheck />
@@ -157,6 +172,11 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
             <Button
               size={'icon'}
               onClick={() => {
+                if (!auth) {
+                  navigate('/login')
+                  return
+                }
+
                 if (isSaved) {
                   unsaveProduct()
                   return
@@ -181,8 +201,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                   )
 
                   toast(
-                    `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
-                      M ${variant!.size.M} / W ${variant!.size.W}' has been removed from your cart`,
+                    `'${name} • ${variant!.color} • ${variant!.size}' has been removed from your cart`,
                     {
                       description: totalQuantity > 0 && (
                         <span className="text-muted-foreground">
@@ -215,8 +234,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 )
 
                 toast(
-                  `'${name} • ${color!.charAt(0).toUpperCase() + color!.slice(1)} • 
-                    M ${variant!.size.M} / W ${variant!.size.W}' has been added to your cart`,
+                  `'${name} • ${variant!.color} • ${variant!.size}' has been added to your cart`,
                   {
                     description: totalQuantity > 0 && (
                       <span className="text-muted-foreground">

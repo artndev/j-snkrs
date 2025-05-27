@@ -26,9 +26,9 @@ declare global {
     totalProductPrice: number
     totalProductPriceCoded: string
     variant: {
-      key: number
       color: string
       size: ISize
+      image: string
     }
   }
 
