@@ -1,4 +1,4 @@
-> J-SNKRS — yours way into sneakers! Custom Nike SNKRS from JAPAN
+> J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN
 
 You can find there the source code of sneakers store. It includes:
 
