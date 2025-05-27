@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useAuthContext } from '@/contexts/Auth.js'
 import { addProduct, removeProduct } from '@/pizza_slices/Cart'
 import { Circle, CircleCheck, Heart, HeartOff, Minus, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -16,7 +17,6 @@ import axios from '../axios.js'
 import config from '../config.json'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/ProductFront.css'
-import { useAuthContext } from '@/contexts/Auth.js'
 
 const AppProductFront: React.FC<IProductFrontProps> = ({
   id,

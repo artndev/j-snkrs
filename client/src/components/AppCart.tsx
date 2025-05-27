@@ -21,7 +21,6 @@ import axios from '../axios.js'
 import { useReduxDispatch, useReduxSelector } from '../hooks/redux'
 import '../styles/css/Cart.css'
 import { Button } from './ui/button'
-import { useEffect } from 'react'
 
 const AppCart = () => {
   const navigate = useNavigate()
