@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import path from 'path'
-const clientBuildPath = path.join(process.cwd(), 'client', 'dist')
+const clientBuildPath = path.join(process.cwd(), '../', 'client', 'dist')
 
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
@@ -42,7 +42,7 @@ app.use(
       maxAge: 3600000, // 1h
       path: '/',
       httpOnly: true,
-      secure: true, // false
+      secure: false, // true
       sameSite: 'lax', // for stripe redirects
     },
   })
@@ -94,7 +94,7 @@ app.get('/*', (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'))
 })
 
-const port = config.SERVER_PORT
+const port = Number(process.env.PORT) ?? config.SERVER_PORT
 app.listen(port, () =>
   console.log(`Server listening on port ${port}\nhttp://localhost:${port}`)
 )
