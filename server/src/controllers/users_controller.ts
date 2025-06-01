@@ -221,4 +221,41 @@ export default {
       })
     }
   },
+  VerifyEmail: async (req: Request, id: number) => {
+    try {
+      const [rows] = await pool.query<ResultSetHeader>(
+        `
+          UPDATE Users SET Verified = TRUE
+          WHERE Id = ?;
+        `,
+        [id]
+      )
+
+      if (!rows.affectedRows) throw new Error('User is not found')
+
+      req.session!.passport!.user!.Verified = true
+      req.session.save(err => {
+        if (err) {
+          console.log(err)
+        }
+      })
+
+      const [rows2] = await pool.query<IUser[]>(
+        'SELECT * FROM Users WHERE Id = ?',
+        [id]
+      )
+
+      return {
+        message: 'You have successfully verified email',
+        answer: rows2[0],
+      }
+    } catch (err) {
+      console.log(err)
+
+      return {
+        message: 'Server is not responding',
+        answer: null,
+      }
+    }
+  },
 }

@@ -33,13 +33,14 @@ declare global {
   }
 
   export interface IUser extends ResultSetHeader {
-    Id?: number
+    Id: number
     Username: string
     Password: string
     Email: string
     GoogleId: string | null
     GithubId: string | null
     Created: string
+    Verified: boolean
   }
 
   export interface ICredentials {

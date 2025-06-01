@@ -11,8 +11,8 @@ declare global {
     Username: string
     Password: string
     Email: string
-    GoogleId: string
-    GithubId: string
+    GoogleId: string | null
+    GithubId: string | null
     Created: string
   }
 
