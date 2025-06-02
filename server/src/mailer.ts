@@ -24,7 +24,7 @@ export default {
     return transporter
       .sendMail({
         to: to,
-        from: process.env.NODEMAILER_USER,
+        from: `ArtBot <${process.env.NODEMAILER_USER}>`,
         subject: subject,
         html: html,
       })

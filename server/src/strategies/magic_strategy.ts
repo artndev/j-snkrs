@@ -14,11 +14,10 @@ export const magicLogin = new MagicLoginStrategy.default({
   sendMagicLink: async (destination, href) => {
     const user = JSON.parse(destination) as ICredentials
 
-    console.log(user.email)
     await mailer.sendMail(
       [user.email],
       'Confirm Your Email',
-      `<a href="${config.SERVER_URL + href}"> Tap here </a>`
+      `<a href="${href}"> Tap here </a>`
     )
   },
   verify: async (payload, done, req) => {

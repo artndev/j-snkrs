@@ -37,8 +37,9 @@ declare global {
     id: number | undefined
     username: string | undefined
     email: string | undefined
-    googleId: string | undefined
-    githubId: string | undefined
+    googleId: string | null | undefined
+    githubId: string | null | undefined
+    verified: boolean | undefined
     saves: IProduct[] | undefined
   }
 }

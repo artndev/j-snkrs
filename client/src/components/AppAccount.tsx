@@ -21,6 +21,7 @@ const AppAccount: React.FC<IAccountProps> = ({
   email,
   googleId,
   githubId,
+  verified,
   saves,
 }) => {
   const { setAuth } = useAuthContext()
@@ -60,7 +61,14 @@ const AppAccount: React.FC<IAccountProps> = ({
               Username: <strong>{username || 'guest'}</strong>
             </li>
             <li>
-              Email: <strong>{email || 'unknown'}</strong>
+              <span>
+                Email: <strong>{email || 'unknown'}</strong>
+              </span>{' '}
+              {!verified ? (
+                <span className="text-red-500">(not verified)</span>
+              ) : (
+                <span className="text-green-500">(verified)</span>
+              )}
             </li>
           </ul>
         </CardContent>

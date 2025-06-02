@@ -3,5 +3,6 @@
   "currencyCodes": {
     "usd": "$",
     "eur": "€"
-  }
+  },
+  "timerLimit": 300
 }

@@ -13,6 +13,7 @@ declare global {
     Email: string
     GoogleId: string | null
     GithubId: string | null
+    Verified: boolean
     Created: string
   }
 

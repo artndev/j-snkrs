@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import type { ResultSetHeader } from 'mysql2'
 import pool from '../pool.js'
 
@@ -261,6 +261,33 @@ export default {
         message: 'Server is not responding',
         answer: null,
       }
+    }
+  },
+  IsNotRegistered: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = JSON.parse(req.body.destination) as ICredentials
+
+      const [rows] = await pool.query<IUser[]>(
+        'SELECT * FROM Users WHERE Username = ? OR Email = ?;',
+        [user.username, user.email]
+      )
+
+      if (rows.length) {
+        res.status(400).json({
+          message: 'Your authorization credentials are invalid',
+          answer: null,
+        })
+        return
+      }
+
+      next()
+    } catch (err) {
+      console.log(err)
+
+      res.status(500).json({
+        message: 'Server is not responding',
+        answer: null,
+      })
     }
   },
 }

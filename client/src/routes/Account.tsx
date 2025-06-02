@@ -26,6 +26,7 @@ const Account = () => {
         email={auth?.Email}
         googleId={auth?.GoogleId}
         githubId={auth?.GithubId}
+        verified={auth?.Verified}
         saves={saves}
       />
     </div>
