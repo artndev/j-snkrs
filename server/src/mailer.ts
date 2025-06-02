@@ -18,7 +18,7 @@ export default {
         clientSecret: process.env.NODEMAILER_GOOGLE_CLIENT_SECRET,
         refreshToken: process.env.NODEMAILER_GOOGLE_REFRESH_TOKEN,
       },
-      tls: { rejectUnauthorized: false },
+      tls: { rejectUnauthorized: false }, // only for localhost
     })
 
     return transporter
