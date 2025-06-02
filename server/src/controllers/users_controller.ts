@@ -4,14 +4,19 @@ import type { ResultSetHeader } from 'mysql2'
 import pool from '../pool.js'
 
 export default {
-  Register: async (credentials: ICredentials) => {
+  Register: async (credentials: ICredentials, verified?: boolean) => {
     try {
       const salt = await bcrypt.genSalt(10)
       const passwordHash = await bcrypt.hash(credentials.password, salt)
 
       await pool.query<ResultSetHeader>(
-        'INSERT INTO Users (Username, Password, Email) VALUES (?, ?, ?);',
-        [credentials.username, passwordHash, credentials.email]
+        'INSERT INTO Users (Username, Password, Email, Verified) VALUES (?, ?, ?, ?);',
+        [
+          credentials.username,
+          passwordHash,
+          credentials.email,
+          verified ?? false,
+        ]
       )
 
       const [rows] = await pool.query<IUser[]>(

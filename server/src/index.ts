@@ -14,6 +14,7 @@ import config from './config.json' with { type: 'json' }
 import * as middlewares from './middlewares.js'
 import * as routers from './routers/_routers.js'
 import './strategies/_strategies.js'
+import './mailer.js'
 
 let redisClient = createClient({ url: process.env.REDIS_URL })
 redisClient.connect().catch(console.error)
