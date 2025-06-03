@@ -1,6 +1,7 @@
 export {}
 import 'express-session'
 import 'passport-magic-link'
+import 'express'
 
 declare module 'express-session' {
   interface SessionData {
@@ -11,6 +12,8 @@ declare module 'express-session' {
 }
 
 declare module 'passport-magic-link' {}
+
+interface User {}
 
 declare global {
   namespace Express {

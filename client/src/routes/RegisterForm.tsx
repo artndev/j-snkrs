@@ -88,7 +88,7 @@ const RegisterForm = () => {
             </CardHeader>
             <CardContent>
               You have just registered but you need to verify your email. Check
-              the email box for the confirm link sent by @ArtBot...
+              the email box for a confirm link sent by @ArtBot...
             </CardContent>
             <CardFooter className="flex-col items-start gap-[10px]">
               {timerValue > 0 && (

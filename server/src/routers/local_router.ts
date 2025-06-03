@@ -1,8 +1,8 @@
 import express from 'express'
 import passport from 'passport'
 import config from '../config.json' with { type: 'json' }
+import * as middlewares from '../middlewares.js'
 import { magicLogin } from '../strategies/magic_strategy.js'
-import { usersController } from '../controllers/_controllers'
 
 const router = express.Router()
 
@@ -14,7 +14,7 @@ router.post(
   })
 )
 
-router.post('/register', usersController.IsNotRegistered, magicLogin.send)
+router.post('/register', middlewares.IsNotRegistered, magicLogin.send)
 
 router.get('/register/callback', (req, res, next) => {
   return passport.authenticate(

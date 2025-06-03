@@ -9,6 +9,18 @@ declare global {
     withSocials?: boolean
   }
 
+  export interface IAuthFormDialogProps {
+    formTitle: string
+    formDescription: string
+    onSubmit: (...args) => void
+    err: boolean
+    trigger: React.ReactNode
+    defaultUsername: string | undefined
+    defaultPassword: string | undefined
+    defaultEmail?: string
+    withEmail?: boolean
+  }
+
   export interface IProductFrontProps {
     id: number
     name: string

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import type { ResultSetHeader } from 'mysql2'
 import pool from '../pool.js'
 
@@ -58,13 +58,86 @@ export default {
       throw new Error('Server is not responding')
     }
   },
+  UpdateCurrent: async (req: Request, res: Response) => {
+    try {
+      const [rows] = await pool.query<ResultSetHeader>(
+        `
+        UPDATE Users SET (${req.body.fields.join(',')}) VALUES (${req.body.values.join(',')})
+        WHERE Id = ?;
+      `,
+        [req.user!.Id]
+      )
+
+      if (!rows.affectedRows) {
+        res.status(404).json({
+          message: 'User has not been found',
+          answer: null,
+        })
+        return
+      }
+
+      const [rows2] = await pool.query<IUser[]>(
+        'SELECT * FROM Users WHERE Id = ?;',
+        [req.user!.Id]
+      )
+
+      req.session!.passport!.user = rows2[0]
+      req.session.save(err => {
+        if (err) {
+          console.log(err)
+        }
+      })
+
+      res.status(200).json({
+        message: 'User has been successfully updated',
+        answer: rows2[0],
+      })
+    } catch (err) {
+      console.log(err)
+
+      res.status(500).json({
+        message: 'Server is not responding',
+        answer: true,
+      })
+    }
+  },
+  DeleteCurrent: async (req: Request, res: Response) => {
+    const [rows] = await pool.query<ResultSetHeader>(
+      `
+        DELETE Saves, Checks
+        FROM Saves
+        JOIN Checks ON 
+        Saves.UserId = Checks.UserId
+        WHERE Saves.UserId = ?;
+      `,
+      [req.user!.Id]
+    )
+
+    if (!rows.affectedRows) {
+      res.status(404).json({
+        message: 'User has not been found',
+        answer: null,
+      })
+      return
+    }
+
+    req.session!.passport!.user = undefined
+    req.session.save(err => {
+      if (err) {
+        console.log(err)
+      }
+    })
+
+    res.status(404).json({
+      message: 'User has been successfully updated',
+      answer: true,
+    })
+  },
   AttachGoogleId: async (data: {
     id: string | undefined
     googleId: string
   }) => {
     try {
-      console.log(data.googleId)
-
       const [rows] = await pool.query<IUser[]>(
         'SELECT * FROM Users WHERE GoogleId = ?;',
         [data.googleId]
@@ -128,7 +201,7 @@ export default {
         user = rows2[0]
       }
 
-      if (!user) throw new Error('User is not found')
+      if (!user) throw new Error('User has not been found')
 
       return {
         message: 'You have successfully attached social id',
@@ -195,7 +268,7 @@ export default {
 
       if (!rows.affectedRows) {
         res.status(404).json({
-          message: 'User is not found',
+          message: 'User has not been found',
           answer: null,
         })
         return
@@ -226,68 +299,41 @@ export default {
       })
     }
   },
-  VerifyEmail: async (req: Request, id: number) => {
-    try {
-      const [rows] = await pool.query<ResultSetHeader>(
-        `
-          UPDATE Users SET Verified = TRUE
-          WHERE Id = ?;
-        `,
-        [id]
-      )
+  // VerifyEmail: async (req: Request, id: number) => {
+  //   try {
+  //     const [rows] = await pool.query<ResultSetHeader>(
+  //       `
+  //         UPDATE Users SET Verified = TRUE
+  //         WHERE Id = ?;
+  //       `,
+  //       [id]
+  //     )
 
-      if (!rows.affectedRows) throw new Error('User is not found')
+  //     if (!rows.affectedRows) throw new Error('User is not found')
 
-      req.session!.passport!.user!.Verified = true
-      req.session.save(err => {
-        if (err) {
-          console.log(err)
-        }
-      })
+  //     req.session!.passport!.user!.Verified = true
+  //     req.session.save(err => {
+  //       if (err) {
+  //         console.log(err)
+  //       }
+  //     })
 
-      const [rows2] = await pool.query<IUser[]>(
-        'SELECT * FROM Users WHERE Id = ?',
-        [id]
-      )
+  //     const [rows2] = await pool.query<IUser[]>(
+  //       'SELECT * FROM Users WHERE Id = ?',
+  //       [id]
+  //     )
 
-      return {
-        message: 'You have successfully verified email',
-        answer: rows2[0],
-      }
-    } catch (err) {
-      console.log(err)
+  //     return {
+  //       message: 'You have successfully verified email',
+  //       answer: rows2[0],
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
 
-      return {
-        message: 'Server is not responding',
-        answer: null,
-      }
-    }
-  },
-  IsNotRegistered: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const user = JSON.parse(req.body.destination) as ICredentials
-
-      const [rows] = await pool.query<IUser[]>(
-        'SELECT * FROM Users WHERE Username = ? OR Email = ?;',
-        [user.username, user.email]
-      )
-
-      if (rows.length) {
-        res.status(400).json({
-          message: 'Your authorization credentials are invalid',
-          answer: null,
-        })
-        return
-      }
-
-      next()
-    } catch (err) {
-      console.log(err)
-
-      res.status(500).json({
-        message: 'Server is not responding',
-        answer: null,
-      })
-    }
-  },
+  //     return {
+  //       message: 'Server is not responding',
+  //       answer: null,
+  //     }
+  //   }
+  // },
 }

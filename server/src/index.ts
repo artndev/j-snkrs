@@ -3,6 +3,7 @@ dotenv.config()
 
 import path from 'path'
 const clientBuildPath = path.join(process.cwd(), '../', 'client', 'dist')
+const staticPath = path.join(process.cwd(), '../', 'server', 'src', 'static')
 
 import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
@@ -15,6 +16,7 @@ import * as middlewares from './middlewares.js'
 import * as routers from './routers/_routers.js'
 import './strategies/_strategies.js'
 import './mailer.js'
+import fs from 'fs'
 
 let redisClient = createClient({ url: process.env.REDIS_URL })
 redisClient.connect().catch(console.error)
@@ -31,6 +33,7 @@ const app = express()
 // )
 app.use(express.json())
 app.use(express.static(clientBuildPath))
+app.use(express.static(staticPath))
 app.use(cookieParser(process.env.SESSION_SECRET!))
 app.use(
   session({
@@ -66,29 +69,17 @@ app.use('/api/saves', middlewares.isAuthenticated, routers.savesRouter)
 app.use('/api/local', middlewares.isNotAuthenticated, routers.localRouter)
 app.use('/api/google', routers.googleRouter)
 app.use('/api/github', routers.githubRouter)
+app.use('/api/auth', middlewares.isAuthenticated, routers.userRouter)
 
-app.get('/api/auth/status', middlewares.isAuthenticated, (req, res) => {
-  res.status(200).json({
-    message: 'You are authorized',
-    answer: req.user,
-  })
-})
+app.get('/api/static/:id', (req, res) => {
+  const filePath = path.join(staticPath, req.params.id)
 
-app.post('/api/auth/logout', middlewares.isAuthenticated, (req, res) => {
-  req.logout(err => {
-    if (err) {
-      res.status(500).json({
-        message: 'Server is not responding',
-        answer: null,
-      })
-      return
-    }
+  if (!fs.existsSync(filePath)) {
+    res.sendFile(path.join(staticPath, '404.jpg'))
+    return
+  }
 
-    res.status(200).json({
-      message: 'You have successfully logged out',
-      answer: true,
-    })
-  })
+  res.sendFile(filePath)
 })
 
 app.get('/*', (_req, res) => {

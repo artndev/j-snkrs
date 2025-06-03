@@ -35,6 +35,8 @@ declare global {
     email?: string
   }
 
+  export type IAuthFormDataKeys = 'username' | 'password' | 'email'
+
   export interface IVariant {
     color: string
     size: string

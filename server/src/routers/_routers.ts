@@ -4,6 +4,7 @@ import localRouter from './local_router.js'
 import ordersRouter from './orders_router.js'
 import productsRouter from './products_router.js'
 import savesRouter from './saves_router.js'
+import userRouter from './user_router.js'
 
 export {
   githubRouter,
@@ -12,4 +13,5 @@ export {
   ordersRouter,
   productsRouter,
   savesRouter,
+  userRouter,
 }

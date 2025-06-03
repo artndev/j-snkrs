@@ -1,13 +1,12 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { NextFunction, Request, Response } from 'express'
-import type { ResultSetHeader } from 'mysql2'
+import { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
 import { Stripe } from 'stripe'
 import { v4 as uuidv4 } from 'uuid'
 import config from '../config.json' with { type: 'json' }
 import pool from '../pool.js'
-import jwt from 'jsonwebtoken'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET!)
 export default {
@@ -17,8 +16,7 @@ export default {
         price_data: {
           currency: product.currency,
           product_data: {
-            name: `${product.name} • ${product.variant.color.charAt(0).toUpperCase() + product.variant.color.slice(1)} • 
-            M ${product.variant.size.M} / W ${product.variant.size.W}`,
+            name: `${product.name} • ${product.variant.color} • ${product.variant.size}`,
             images: [product.variant.image],
             metadata: {
               id: product.id,
@@ -61,44 +59,6 @@ export default {
       })
     } catch (err) {
       console.error(err)
-
-      res.status(500).json({
-        message: 'Server is not responding',
-        answer: err,
-      })
-    }
-  },
-  // middleware
-  createCheck: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user!.Id
-      const token = req.query.token as string
-
-      jwt.verify(token, process.env.JWT_SECRET!)
-
-      const data = jwt.decode(token) as IJwtPayload
-
-      const [rows] = await pool.query<IProduct[]>(
-        'SELECT * FROM Checks WHERE ReferenceId = ? AND UserId = ?;',
-        [data.referenceId, userId]
-      )
-
-      if (rows.length) {
-        res.status(400).json({
-          message: 'You have already created check with such id',
-          answer: null,
-        })
-        return
-      }
-
-      await pool.query<ResultSetHeader>(
-        'INSERT INTO Checks (ReferenceId, LineItems, TotalPrice, UserId) VALUES (?, ?, ?, ?);',
-        [data.referenceId, data.lineItems, data.totalPrice, userId]
-      )
-
-      next()
-    } catch (err) {
-      console.log(err)
 
       res.status(500).json({
         message: 'Server is not responding',

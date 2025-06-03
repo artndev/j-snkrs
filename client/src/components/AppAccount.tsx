@@ -1,19 +1,32 @@
+import { Button } from '@/components/ui/button.js'
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { useAuthContext } from '@/contexts/Auth'
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Plus } from 'lucide-react'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
+import { AppAuthFormDialog } from './AppAuthForm.js'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -24,7 +37,7 @@ const AppAccount: React.FC<IAccountProps> = ({
   verified,
   saves,
 }) => {
-  const { setAuth } = useAuthContext()
+  const { auth, setAuth } = useAuthContext()
 
   const unattachGoogleId = () => {
     try {
@@ -41,6 +54,22 @@ const AppAccount: React.FC<IAccountProps> = ({
     try {
       axios
         .post('/api/github/unattach')
+        .then(res => setAuth(res.data.answer))
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const updateCurrent = (data: IAuthFormData) => {
+    try {
+      const keys = Object.keys(data)
+
+      axios
+        .put('/api/github/unattach', {
+          fields: keys.map(key => key.charAt(0).toUpperCase + key.substring(1)),
+          values: keys.map(key => data[key as IAuthFormDataKeys]),
+        })
         .then(res => setAuth(res.data.answer))
         .catch(err => console.log(err))
     } catch (err) {
@@ -65,13 +94,53 @@ const AppAccount: React.FC<IAccountProps> = ({
                 Email: <strong>{email || 'unknown'}</strong>
               </span>{' '}
               {!verified ? (
-                <span className="text-red-500">(not verified)</span>
+                <span className="italic text-(--destructive)">
+                  (not verified)
+                </span>
               ) : (
-                <span className="text-green-500">(verified)</span>
+                <span className="italic text-green-500">(verified)</span>
               )}
             </li>
           </ul>
         </CardContent>
+        <CardFooter className="gap-[5px] mt-[10px]">
+          <Dialog>
+            <DialogTrigger>
+              <Button variant={'destructive'} size={'icon'}>
+                <Trash2 />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from the server
+                </DialogDescription>
+                <DialogFooter className="mt-[10px]">
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit">I am sure</Button>
+                </DialogFooter>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+          <AppAuthFormDialog
+            formTitle="Edit profile"
+            formDescription="Make changes to your profile here. Click submit when you are done"
+            err={false}
+            onSubmit={updateCurrent}
+            trigger={
+              <Button size={'icon'}>
+                <Pencil />
+              </Button>
+            }
+            defaultUsername={auth?.Username}
+            defaultPassword={auth?.Password}
+            withEmail
+          />
+        </CardFooter>
       </Card>
       <Card className="gap-[10px] w-full">
         <CardHeader>

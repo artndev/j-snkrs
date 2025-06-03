@@ -1,6 +1,7 @@
 import express from 'express'
 import config from '../config.json' with { type: 'json' }
 import { ordersController } from '../controllers/_controllers.js'
+import * as middlewares from '../middlewares.js'
 
 const router = express.Router()
 
@@ -8,7 +9,7 @@ router.get('/', ordersController.getChecks)
 
 router.post('/checkout', ordersController.createCheckoutSession)
 
-router.get('/success', ordersController.createCheck, (_req, res) => {
+router.get('/success', middlewares.createCheck, (_req, res) => {
   res.send(`
     <html>
       <head>
