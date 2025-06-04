@@ -18,11 +18,12 @@ declare global {
     errDescription?: string
     trigger?: React.ReactNode
     inputs: {
-      name: string
+      isOTP?: boolean
+      name: 'code' | 'email' | 'username' | 'password'
       label: string
       description?: React.ReactNode
       type?: 'text' | 'password' | 'email'
-      pattern?: string
+      pattern?: RegExp
       placeholder?: string
       defaultValue?: string | undefined
     }[]

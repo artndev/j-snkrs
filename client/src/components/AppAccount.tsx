@@ -147,17 +147,17 @@ const AppAccount: React.FC<IAccountProps> = ({
                   ],
                 }}
                 submodalProps={{
-                  onSubmit: () => console.log('End!!'),
-                  formTitle: 'Edit profile',
+                  onSubmit: updateCurrent,
+                  formTitle: 'Verify the new email',
                   formDescription:
-                    'Make changes to your profile here. Click submit when you are done',
+                    'In few seconds you will receive the email with the confirmation link. Check your email box and click submit when you are done',
                   err: false,
                   inputs: [
                     {
-                      type: 'email',
-                      name: 'email',
-                      label: 'Email',
-                      defaultValue: auth?.Email,
+                      isOTP: true,
+                      name: 'code',
+                      label: 'Code',
+                      pattern: /^\d+$/,
                     },
                   ],
                 }}

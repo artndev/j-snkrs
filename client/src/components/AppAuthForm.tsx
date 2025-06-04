@@ -19,11 +19,19 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp'
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import config from '../config.json'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({
@@ -170,6 +178,14 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
   )
 }
 
+// ? Fix validations for another types of dialogs
+const formSchema = z.object({
+  username: z.string().max(20).optional(),
+  password: z.string().max(20).optional(),
+  email: z.string().max(20).optional(),
+  code: z.string().regex(/^\d+$/).optional(),
+})
+
 // ? Here! Found out some solutions
 // Edit password / email / username separate dialog-forms
 export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
@@ -184,7 +200,10 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   opened,
   setOpened,
 }) => {
-  const form = useForm()
+  const form = useForm<z.infer<typeof formSchema>>({
+    mode: 'onChange',
+    resolver: zodResolver(formSchema),
+  })
   const [inputType, setInputType] = useState('password')
 
   return (
@@ -196,7 +215,10 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
           <DialogDescription>{formDescription}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="flex flex-col gap-[10px]">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-[10px]"
+          >
             {err && (
               <span className="italic text-(--destructive)">
                 {errDescription ??
@@ -204,65 +226,82 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
               </span>
             )}
             {inputs.map((input, i) => {
+              console.log(input.pattern)
+
               return (
                 <FormField
                   key={i}
                   control={form.control}
                   name={input.name}
+                  rules={{ required: true }}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{input.label}</FormLabel>
                       {input?.description && (
                         <FormDescription>{input.description}</FormDescription>
                       )}
-                      {input?.type !== 'password' ? (
-                        <FormControl>
-                          <Input
-                            type={input?.type ?? 'text'}
-                            pattern={input?.pattern}
-                            placeholder={
-                              input?.placeholder ??
-                              `Enter your ${input.name}...`
-                            }
-                            defaultValue={input?.defaultValue}
-                            required
-                            {...field}
-                          />
-                        </FormControl>
+                      {!input.isOTP ? (
+                        <>
+                          {input?.type !== 'password' ? (
+                            <FormControl>
+                              <Input
+                                type={input?.type ?? 'text'}
+                                placeholder={
+                                  input?.placeholder ??
+                                  `Enter your ${input.name}...`
+                                }
+                                defaultValue={input?.defaultValue}
+                                {...field}
+                              />
+                            </FormControl>
+                          ) : (
+                            <div className="relative">
+                              <FormControl>
+                                <Input
+                                  type={inputType}
+                                  placeholder={
+                                    input?.placeholder ??
+                                    `Enter your ${input.name}...`
+                                  }
+                                  defaultValue={input?.defaultValue}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <button
+                                className="password__input-btn closed"
+                                type="button"
+                                onClick={e => {
+                                  const target = e.target as HTMLButtonElement
+
+                                  if (target.classList.contains('closed')) {
+                                    target.classList.remove('closed')
+                                    target.classList.add('opened')
+                                    setInputType('text')
+                                    return
+                                  }
+
+                                  target.classList.remove('opened')
+                                  target.classList.add('closed')
+                                  setInputType('password')
+                                }}
+                              />
+                            </div>
+                          )}
+                        </>
                       ) : (
-                        <div className="relative">
-                          <FormControl>
-                            <Input
-                              type={inputType}
-                              pattern={input?.pattern}
-                              placeholder={
-                                input?.placeholder ??
-                                `Enter your ${input.name}...`
-                              }
-                              defaultValue={input?.defaultValue}
-                              required
-                              {...field}
-                            />
-                          </FormControl>
-                          <button
-                            className="password__input-btn closed"
-                            type="button"
-                            onClick={e => {
-                              const target = e.target as HTMLButtonElement
-
-                              if (target.classList.contains('closed')) {
-                                target.classList.remove('closed')
-                                target.classList.add('opened')
-                                setInputType('text')
-                                return
-                              }
-
-                              target.classList.remove('opened')
-                              target.classList.add('closed')
-                              setInputType('password')
-                            }}
-                          />
-                        </div>
+                        <InputOTP maxLength={6} {...field}>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                          </InputOTPGroup>
+                          <InputOTPSeparator />
+                          <InputOTPGroup>
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
                       )}
                       <FormMessage />
                     </FormItem>
@@ -306,8 +345,6 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
     <>
       <AppAuthFormDialog
         onSubmit={e => {
-          e.preventDefault()
-
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
@@ -316,7 +353,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         {...modalProps}
       />
       <AppAuthFormDialog
-        onClick={() => setSubmodalOpened(false)}
+        // onClick={() => setSubmodalOpened(false)}
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
         {...submodalProps}
