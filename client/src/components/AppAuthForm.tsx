@@ -344,7 +344,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   return (
     <>
       <AppAuthFormDialog
-        onSubmit={e => {
+        onSubmit={() => {
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
