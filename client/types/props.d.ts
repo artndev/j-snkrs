@@ -12,13 +12,30 @@ declare global {
   export interface IAuthFormDialogProps {
     formTitle: string
     formDescription: string
+    onClick?: (...args) => void
     onSubmit: (...args) => void
     err: boolean
-    trigger: React.ReactNode
-    defaultUsername: string | undefined
-    defaultPassword: string | undefined
-    defaultEmail?: string
-    withEmail?: boolean
+    errDescription?: string
+    trigger?: React.ReactNode
+    inputs: {
+      name: string
+      label: string
+      description?: React.ReactNode
+      type?: 'text' | 'password' | 'email'
+      pattern?: string
+      placeholder?: string
+      defaultValue?: string | undefined
+    }[]
+    opened: boolean | undefined
+    setOpened: (...args) => void
+  }
+
+  export interface IAuthFormDialogsProps {
+    modalProps: Omit<IAuthFormDialogProps, 'onSubmit' | 'opened' | 'setOpened'>
+    submodalProps: Omit<
+      IAuthFormDialogProps,
+      'onClick' | 'opened' | 'setOpened'
+    >
   }
 
   export interface IProductFrontProps {

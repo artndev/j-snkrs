@@ -1,5 +1,15 @@
 import { Button } from '@/components/ui/button'
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import {
   Form,
   FormControl,
   FormDescription,
@@ -12,19 +22,9 @@ import { Input } from '@/components/ui/input'
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import config from '../config.json'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({
   formTitle,
@@ -175,135 +175,153 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
 export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   formTitle,
   formDescription,
+  onClick,
   onSubmit,
   err,
+  errDescription,
   trigger,
-  defaultUsername,
-  defaultPassword,
-  defaultEmail,
-  withEmail,
+  inputs,
+  opened,
+  setOpened,
 }) => {
   const form = useForm()
   const [inputType, setInputType] = useState('password')
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog open={opened} onOpenChange={setOpened}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{formTitle}</DialogTitle>
           <DialogDescription>{formDescription}</DialogDescription>
         </DialogHeader>
-
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-[10px]"
-          >
+          <form onSubmit={onSubmit} className="flex flex-col gap-[10px]">
             {err && (
               <span className="italic text-(--destructive)">
-                This username has already been taken or your credentials are
-                incorrect
+                {errDescription ??
+                  'This username has already been taken or your credentials are incorrect'}
               </span>
             )}
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormDescription>
-                    Cannot be started with a digit. Must contain 5 to 20
-                    characters without spaces: <em>a-z/0-9/_</em>
-                  </FormDescription>
-                  <FormControl>
-                    <Input
-                      pattern="^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$"
-                      placeholder="Enter your username.."
-                      defaultValue={defaultUsername ?? ''}
-                      required
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormDescription>
-                    Must contain 5 to 20 characters without spaces:{' '}
-                    <em>'a-z', 'A-Z', '0-9' and './_/!/@/#/$/%/^/&/*'</em>
-                  </FormDescription>
-                  <div className="relative">
-                    <FormControl>
-                      <Input
-                        type={inputType}
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_.!@#$%^&*])[a-zA-Z0-9_.!@#$%^&*]{5,20}$"
-                        placeholder="Enter your password.."
-                        defaultValue={defaultPassword ?? ''}
-                        required
-                        {...field}
-                      />
-                    </FormControl>
-                    <button
-                      className="password__input-btn closed"
-                      type="button"
-                      onClick={e => {
-                        const target = e.target as HTMLButtonElement
+            {inputs.map((input, i) => {
+              return (
+                <FormField
+                  key={i}
+                  control={form.control}
+                  name={input.name}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{input.label}</FormLabel>
+                      {input?.description && (
+                        <FormDescription>{input.description}</FormDescription>
+                      )}
+                      {input?.type !== 'password' ? (
+                        <FormControl>
+                          <Input
+                            type={input?.type ?? 'text'}
+                            pattern={input?.pattern}
+                            placeholder={
+                              input?.placeholder ??
+                              `Enter your ${input.name}...`
+                            }
+                            defaultValue={input?.defaultValue}
+                            required
+                            {...field}
+                          />
+                        </FormControl>
+                      ) : (
+                        <div className="relative">
+                          <FormControl>
+                            <Input
+                              type={inputType}
+                              pattern={input?.pattern}
+                              placeholder={
+                                input?.placeholder ??
+                                `Enter your ${input.name}...`
+                              }
+                              defaultValue={input?.defaultValue}
+                              required
+                              {...field}
+                            />
+                          </FormControl>
+                          <button
+                            className="password__input-btn closed"
+                            type="button"
+                            onClick={e => {
+                              const target = e.target as HTMLButtonElement
 
-                        if (target.classList.contains('closed')) {
-                          target.classList.remove('closed')
-                          target.classList.add('opened')
-                          setInputType('text')
-                          return
-                        }
+                              if (target.classList.contains('closed')) {
+                                target.classList.remove('closed')
+                                target.classList.add('opened')
+                                setInputType('text')
+                                return
+                              }
 
-                        target.classList.remove('opened')
-                        target.classList.add('closed')
-                        setInputType('password')
-                      }}
-                    />
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {withEmail && defaultEmail && (
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="Enter your email.."
-                        defaultValue={defaultEmail}
-                        required
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+                              target.classList.remove('opened')
+                              target.classList.add('closed')
+                              setInputType('password')
+                            }}
+                          />
+                        </div>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            })}
             <DialogFooter className="mt-[10px]">
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" onClick={onClick}>
+                Submit
+              </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
+  modalProps,
+  submodalProps,
+}) => {
+  const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
+  const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
+    undefined
+  )
+
+  // useEffect(() => {
+  //   console.log('MODAL: ', modalOpened)
+  // }, [modalOpened])
+
+  // useEffect(() => {
+  //   console.log('SUBMODAL: ', submodalOpened)
+  // }, [submodalOpened])
+
+  return (
+    <>
+      <AppAuthFormDialog
+        onSubmit={e => {
+          e.preventDefault()
+
+          setModalOpened(false)
+          setSubmodalOpened(true)
+        }}
+        opened={modalOpened}
+        setOpened={setModalOpened}
+        {...modalProps}
+      />
+      <AppAuthFormDialog
+        onClick={() => setSubmodalOpened(false)}
+        opened={submodalOpened}
+        setOpened={setSubmodalOpened}
+        {...submodalProps}
+      />
+    </>
   )
 }
 

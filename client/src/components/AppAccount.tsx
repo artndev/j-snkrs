@@ -22,11 +22,11 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
-import { AppAuthFormDialog } from './AppAuthForm.js'
+import { AppAuthFormDialogs } from './AppAuthForm.js'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -38,6 +38,11 @@ const AppAccount: React.FC<IAccountProps> = ({
   saves,
 }) => {
   const { auth, setAuth } = useAuthContext()
+
+  const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
+  const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
+    undefined
+  )
 
   const unattachGoogleId = () => {
     try {
@@ -77,21 +82,88 @@ const AppAccount: React.FC<IAccountProps> = ({
     }
   }
 
+  // useEffect(() => {
+  //   console.log(opened)
+  // }, [opened])
+
   return (
     <div className="flex flex-col gap-[20px] w-[min(1000px,_100%)]">
-      <Card className="gap-[10px] w-full">
+      <Card className="gap-[20px]">
         <CardHeader>
           <CardTitle>Account Info</CardTitle>
           <CardDescription>The description of your personality</CardDescription>
         </CardHeader>
         <CardContent className="gap-[10px]">
-          <ul>
-            <li>
-              Username: <strong>{username || 'guest'}</strong>
-            </li>
-            <li>
+          <ul className="flex flex-col gap-[10px]">
+            <li className="flex items-center gap-[10px]">
+              {/* <AppAuthFormDialog
+                formTitle="Edit profile"
+                formDescription="Make changes to your profile here. Click submit when you are done"
+                err={false}
+                onSubmit={updateCurrent}
+                trigger={
+                  <Button size={'icon'}>
+                    <Pencil />
+                  </Button>
+                }
+                inputs={[
+                  {
+                    name: 'username',
+                    label: 'Username',
+                    description: (
+                      <span>
+                        Cannot be started with a digit. Must contain 5 to 20
+                        characters without spaces: <em>a-z/0-9/_</em>
+                      </span>
+                    ),
+                    pattern: '^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$',
+                    defaultValue: auth?.Username,
+                  },
+                ]}
+              /> */}
               <span>
-                Email: <strong>{email || 'unknown'}</strong>
+                Username: <strong>{username ?? 'guest'}</strong>
+              </span>
+            </li>
+            <li className="flex items-center gap-[10px]">
+              <AppAuthFormDialogs
+                modalProps={{
+                  formTitle: 'Edit profile',
+                  formDescription:
+                    'Make changes to your profile here. Click submit when you are done',
+                  err: false,
+                  trigger: (
+                    <Button size={'icon'}>
+                      <Pencil />
+                    </Button>
+                  ),
+                  inputs: [
+                    {
+                      type: 'email',
+                      name: 'email',
+                      label: 'Email',
+                      defaultValue: auth?.Email,
+                    },
+                  ],
+                }}
+                submodalProps={{
+                  onSubmit: () => console.log('End!!'),
+                  formTitle: 'Edit profile',
+                  formDescription:
+                    'Make changes to your profile here. Click submit when you are done',
+                  err: false,
+                  inputs: [
+                    {
+                      type: 'email',
+                      name: 'email',
+                      label: 'Email',
+                      defaultValue: auth?.Email,
+                    },
+                  ],
+                }}
+              />
+              <span>
+                Email: <strong>{email ?? 'unknown'}</strong>
               </span>{' '}
               {!verified ? (
                 <span className="italic text-(--destructive)">
@@ -103,11 +175,12 @@ const AppAccount: React.FC<IAccountProps> = ({
             </li>
           </ul>
         </CardContent>
-        <CardFooter className="gap-[5px] mt-[10px]">
+        <CardFooter className="gap-[5px]">
           <Dialog>
             <DialogTrigger>
-              <Button variant={'destructive'} size={'icon'}>
+              <Button variant={'destructive'}>
                 <Trash2 />
+                <span>Delete my account</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -126,23 +199,9 @@ const AppAccount: React.FC<IAccountProps> = ({
               </DialogHeader>
             </DialogContent>
           </Dialog>
-          <AppAuthFormDialog
-            formTitle="Edit profile"
-            formDescription="Make changes to your profile here. Click submit when you are done"
-            err={false}
-            onSubmit={updateCurrent}
-            trigger={
-              <Button size={'icon'}>
-                <Pencil />
-              </Button>
-            }
-            defaultUsername={auth?.Username}
-            defaultPassword={auth?.Password}
-            withEmail
-          />
         </CardFooter>
       </Card>
-      <Card className="gap-[10px] w-full">
+      <Card className="gap-[10px]">
         <CardHeader>
           <CardTitle>Socials</CardTitle>
           <CardDescription>
@@ -206,7 +265,7 @@ const AppAccount: React.FC<IAccountProps> = ({
           </ul>
         </CardContent>
       </Card>
-      <Card className="gap-[10px] w-full">
+      <Card className="gap-[10px]">
         <CardHeader>
           <CardTitle>Saves</CardTitle>
           <CardDescription>The list of your SNKRS besties</CardDescription>
