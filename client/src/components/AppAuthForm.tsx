@@ -181,9 +181,9 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
 
 // ? Fix validations for another types of dialogs
 const formSchema = z.object({
-  username: z.string().optional(),
-  password: z.string().optional(),
-  email: z.string().optional(),
+  username: z.string().max(100).optional(),
+  password: z.string().max(20).optional(),
+  email: z.string().max(100).optional(),
   otp: z.string().regex(/^\d+$/).optional(),
 })
 
@@ -218,11 +218,10 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            onLoad={() => console.log('HEYO!')}
             className="flex flex-col gap-[10px]"
           >
             {err && (
-              <span className="italic text-(--destructive)">
+              <span className="text-destructive text-sm">
                 {errDescription ??
                   'This username has already been taken or your credentials are incorrect'}
               </span>
@@ -330,10 +329,19 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
 }) => {
   const { onSubmit: modalOnSubmit, ...modalPropsPayload } = modalProps
   const { onSubmit: submodalOnSubmit, ...submodalPropsPayload } = submodalProps
+
   const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
   const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
     undefined
   )
+
+  const [modalErr, setModalErr] = useState<
+    { err: boolean; errDescription: string } | undefined
+  >(undefined)
+  const [submodalErr, setSubmodalErr] = useState<
+    { err: boolean; errDescription: string } | undefined
+  >(undefined)
+
   const [prevData, setPrevData] = useState({})
 
   // useEffect(() => {
@@ -350,23 +358,28 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         opened={modalOpened}
         setOpened={setModalOpened}
         onSubmit={async data => {
-          const otp = await modalOnSubmit(data)
-          if (!otp) {
-            console.log('OTP is invalid')
+          const res = await modalOnSubmit(data)
+          if (!res) {
+            setModalErr({
+              err: true,
+              errDescription: 'Modal has caught some errors',
+            })
             return
           }
 
-          setPrevData({ ...data, otpOriginal: otp })
+          setPrevData({ ...data, ...res })
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
         {...modalPropsPayload}
+        {...(modalErr?.err ? modalErr : {})}
       />
       <AppAuthFormDialog
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
         onSubmit={data => submodalOnSubmit({ ...data, ...prevData })}
         {...submodalPropsPayload}
+        {...(submodalErr?.err ? submodalErr : {})}
       />
     </>
   )

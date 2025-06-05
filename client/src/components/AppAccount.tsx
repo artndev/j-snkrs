@@ -37,7 +37,6 @@ const AppAccount: React.FC<IAccountProps> = ({
   verified,
   saves,
 }) => {
-  const navigator = useNavigate()
   const { auth, setAuth } = useAuthContext()
 
   const unattachGoogleId = () => {
@@ -68,19 +67,23 @@ const AppAccount: React.FC<IAccountProps> = ({
 
       axios
         .put(`/api/auth/update?otp=${otpOriginal}`, dataPayload)
-        .then(() => navigator(0))
+        .then(() => (window.location.href = window.location.href)) // href is clearing cache of modals
         .catch(err => console.log(err))
     } catch (err) {
       console.log(err)
     }
   }
 
-  const sendOTP = (data: IAuthFormData) => {
+  const sendOTP = async (data: IAuthFormData) => {
     try {
-      return axios
+      const res = await axios
         .post('/api/auth/otp', JSON.stringify(data))
         .then(res => res.data.answer)
         .catch(err => console.log(err))
+
+      return {
+        otpOriginal: res,
+      }
     } catch (err) {
       console.log(err)
     }
