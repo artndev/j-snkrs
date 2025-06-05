@@ -60,8 +60,7 @@ export default {
   },
   UpdateCurrent: async (req: Request, res: Response) => {
     try {
-      console.log(req.body.otp, req.query.otp)
-
+      // console.log(req.body.otp, req.query.otp)
       if (!req.query.otp || req.body.otp !== req.query.otp) {
         res.status(400).json({
           message: 'OTP is invalid',

@@ -181,10 +181,10 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
 
 // ? Fix validations for another types of dialogs
 const formSchema = z.object({
-  username: z.string().max(100).optional(),
-  password: z.string().max(20).optional(),
-  email: z.string().max(100).optional(),
-  otp: z.string().regex(/^\d+$/).optional(),
+  username: z.string().max(100).nonempty().optional(),
+  password: z.string().max(20).nonempty().optional(),
+  email: z.string().max(100).nonempty().optional(),
+  otp: z.string().regex(/^\d+$/).nonempty().optional(),
 })
 
 // ? Here! Found out some solutions
@@ -232,7 +232,10 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
                   key={i}
                   control={form.control}
                   name={input.name}
-                  rules={{ required: true }}
+                  rules={{
+                    required: true,
+                  }}
+                  defaultValue={input?.defaultValue}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{input.label}</FormLabel>
@@ -249,7 +252,6 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
                                   input?.placeholder ??
                                   `Enter your ${input.name}...`
                                 }
-                                defaultValue={input?.defaultValue}
                                 {...field}
                               />
                             </FormControl>
@@ -262,7 +264,6 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
                                     input?.placeholder ??
                                     `Enter your ${input.name}...`
                                   }
-                                  defaultValue={input?.defaultValue}
                                   {...field}
                                 />
                               </FormControl>
@@ -359,15 +360,15 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         setOpened={setModalOpened}
         onSubmit={async data => {
           const res = await modalOnSubmit(data)
-          if (!res) {
+          if (!res.answer) {
             setModalErr({
               err: true,
-              errDescription: 'Modal has caught some errors',
+              errDescription: res.message,
             })
             return
           }
 
-          setPrevData({ ...data, ...res })
+          setPrevData({ ...data, ...res.answer })
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
@@ -377,7 +378,15 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
       <AppAuthFormDialog
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
-        onSubmit={data => submodalOnSubmit({ ...data, ...prevData })}
+        onSubmit={async data => {
+          const res = await submodalOnSubmit({ ...data, ...prevData })
+          if (!res.answer) {
+            setSubmodalErr({
+              err: true,
+              errDescription: res.message,
+            })
+          }
+        }}
         {...submodalPropsPayload}
         {...(submodalErr?.err ? submodalErr : {})}
       />

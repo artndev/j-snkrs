@@ -9,7 +9,9 @@ router.put('/update', usersController.UpdateCurrent) // ?otp=
 router.post('/otp', mailer.sendOTP, (req, res) => {
   res.status(200).json({
     message: 'OTP has been successfully sent',
-    answer: req.otp,
+    answer: {
+      otpOriginal: req.otp,
+    },
   })
 })
 

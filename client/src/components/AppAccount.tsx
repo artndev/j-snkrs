@@ -27,6 +27,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
 import { AppAuthFormDialogs } from './AppAuthForm.js'
+import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -61,31 +62,70 @@ const AppAccount: React.FC<IAccountProps> = ({
     }
   }
 
-  const updateCurrent = (data: IAuthFormData) => {
+  const updateCurrent = async (data: IAuthFormData) => {
     try {
       const { otpOriginal, ...dataPayload } = data
 
-      axios
+      const res = await axios
         .put(`/api/auth/update?otp=${otpOriginal}`, dataPayload)
-        .then(() => (window.location.href = window.location.href)) // href is clearing cache of modals
-        .catch(err => console.log(err))
+        .then(res => {
+          window.location.href = window.location.href
+
+          return res
+        }) // href is clearing cache of modals
+        .catch(err => {
+          console.log(err)
+
+          return err
+        })
+
+      return {
+        message:
+          res.data?.message ??
+          res?.response.data.message ??
+          'Message has not been provided',
+        answer: res.data?.answer,
+      }
     } catch (err) {
       console.log(err)
+
+      return {
+        message: 'Server is not responding',
+        answer: null,
+      }
     }
   }
 
   const sendOTP = async (data: IAuthFormData) => {
     try {
+      if (data.email === auth!.Email)
+        return {
+          message: 'The new email is same to yours',
+          answer: null,
+        }
+
       const res = await axios
         .post('/api/auth/otp', JSON.stringify(data))
-        .then(res => res.data.answer)
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          return err
+        })
 
       return {
-        otpOriginal: res,
+        message:
+          res.data?.message ??
+          res?.response.data.message ??
+          'Message has not been provided',
+        answer: res.data?.answer,
       }
     } catch (err) {
       console.log(err)
+
+      return {
+        message: 'Server is not responding',
+        answer: null,
+      }
     }
   }
 
@@ -133,43 +173,45 @@ const AppAccount: React.FC<IAccountProps> = ({
               </span>
             </li>
             <li className="flex items-center gap-[10px]">
-              <AppAuthFormDialogs
-                modalProps={{
-                  onSubmit: sendOTP,
-                  formTitle: 'Edit profile',
-                  formDescription:
-                    'Make changes to your profile here. Click submit when you are done',
-                  err: false,
-                  trigger: (
-                    <Button size={'icon'}>
-                      <Pencil />
-                    </Button>
-                  ),
-                  inputs: [
-                    {
-                      type: 'email',
-                      name: 'email',
-                      label: 'Email',
-                      defaultValue: auth?.Email,
-                    },
-                  ],
-                }}
-                submodalProps={{
-                  onSubmit: updateCurrent,
-                  formTitle: 'Verify the new email',
-                  formDescription:
-                    'In few seconds you will receive the email with the confirmation link. Check your email box and click submit when you are done',
-                  err: false,
-                  inputs: [
-                    {
-                      isOTP: true,
-                      name: 'otp',
-                      label: 'Code',
-                      pattern: /^\d+$/,
-                    },
-                  ],
-                }}
-              />
+              {auth && (
+                <AppAuthFormDialogs
+                  modalProps={{
+                    onSubmit: sendOTP,
+                    formTitle: 'Edit profile',
+                    formDescription:
+                      'Make changes to your profile here. Click submit when you are done',
+                    err: false,
+                    trigger: (
+                      <Button size={'icon'}>
+                        <Pencil />
+                      </Button>
+                    ),
+                    inputs: [
+                      {
+                        type: 'email',
+                        name: 'email',
+                        label: 'Email',
+                        defaultValue: auth!.Email,
+                      },
+                    ],
+                  }}
+                  submodalProps={{
+                    onSubmit: updateCurrent,
+                    formTitle: 'Verify the new email',
+                    formDescription:
+                      'In few seconds you will receive the email with the confirmation link. Check your email box and click submit when you are done',
+                    err: false,
+                    inputs: [
+                      {
+                        isOTP: true,
+                        name: 'otp',
+                        label: 'Code',
+                        pattern: /^\d+$/,
+                      },
+                    ],
+                  }}
+                />
+              )}
               <span>
                 Email: <strong>{email ?? 'unknown'}</strong>
               </span>{' '}
