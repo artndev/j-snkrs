@@ -60,12 +60,29 @@ export default {
   },
   UpdateCurrent: async (req: Request, res: Response) => {
     try {
+      console.log(req.body.otp, req.query.otp)
+
+      if (!req.query.otp || req.body.otp !== req.query.otp) {
+        res.status(400).json({
+          message: 'OTP is invalid',
+          answer: null,
+        })
+        return
+      }
+
+      const { otp, ...bodyPayload } = req.body
+      const keys = Object.keys(bodyPayload)
+      const fields = keys.map(
+        key => key.charAt(0).toUpperCase() + key.substring(1)
+      )
+      const values = keys.map(key => req.body[key])
+      const clause = fields.map(field => `${field} = ?`).join(', ')
       const [rows] = await pool.query<ResultSetHeader>(
         `
-        UPDATE Users SET (${req.body.fields.join(',')}) VALUES (${req.body.values.join(',')})
+        UPDATE Users SET ${clause}
         WHERE Id = ?;
       `,
-        [req.user!.Id]
+        [...values, req.user!.Id]
       )
 
       if (!rows.affectedRows) {

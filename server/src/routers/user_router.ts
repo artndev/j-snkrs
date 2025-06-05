@@ -1,9 +1,17 @@
 import express from 'express'
 import { usersController } from '../controllers/_controllers.js'
+import mailer from '../mailer.js'
 
 const router = express.Router()
 
-router.put('/update', usersController.UpdateCurrent)
+router.put('/update', usersController.UpdateCurrent) // ?otp=
+
+router.post('/otp', mailer.sendOTP, (req, res) => {
+  res.status(200).json({
+    message: 'OTP has been successfully sent',
+    answer: req.otp,
+  })
+})
 
 router.delete('/delete', usersController.DeleteCurrent)
 

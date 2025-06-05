@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
 import { AppAuthFormDialogs } from './AppAuthForm.js'
@@ -37,12 +37,8 @@ const AppAccount: React.FC<IAccountProps> = ({
   verified,
   saves,
 }) => {
+  const navigator = useNavigate()
   const { auth, setAuth } = useAuthContext()
-
-  const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
-  const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
-    undefined
-  )
 
   const unattachGoogleId = () => {
     try {
@@ -68,14 +64,22 @@ const AppAccount: React.FC<IAccountProps> = ({
 
   const updateCurrent = (data: IAuthFormData) => {
     try {
-      const keys = Object.keys(data)
+      const { otpOriginal, ...dataPayload } = data
 
       axios
-        .put('/api/github/unattach', {
-          fields: keys.map(key => key.charAt(0).toUpperCase + key.substring(1)),
-          values: keys.map(key => data[key as IAuthFormDataKeys]),
-        })
-        .then(res => setAuth(res.data.answer))
+        .put(`/api/auth/update?otp=${otpOriginal}`, dataPayload)
+        .then(() => navigator(0))
+        .catch(err => console.log(err))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const sendOTP = (data: IAuthFormData) => {
+    try {
+      return axios
+        .post('/api/auth/otp', JSON.stringify(data))
+        .then(res => res.data.answer)
         .catch(err => console.log(err))
     } catch (err) {
       console.log(err)
@@ -128,6 +132,7 @@ const AppAccount: React.FC<IAccountProps> = ({
             <li className="flex items-center gap-[10px]">
               <AppAuthFormDialogs
                 modalProps={{
+                  onSubmit: sendOTP,
                   formTitle: 'Edit profile',
                   formDescription:
                     'Make changes to your profile here. Click submit when you are done',
@@ -155,7 +160,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                   inputs: [
                     {
                       isOTP: true,
-                      name: 'code',
+                      name: 'otp',
                       label: 'Code',
                       pattern: /^\d+$/,
                     },

@@ -33,9 +33,9 @@ declare global {
     username: string
     password: string
     email?: string
+    otp?: string
+    otpOriginal?: string
   }
-
-  export type IAuthFormDataKeys = 'username' | 'password' | 'email'
 
   export interface IVariant {
     color: string

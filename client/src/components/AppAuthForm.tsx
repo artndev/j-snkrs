@@ -33,6 +33,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import config from '../config.json'
+import axios from '../axios.js'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({
   formTitle,
@@ -180,10 +181,10 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
 
 // ? Fix validations for another types of dialogs
 const formSchema = z.object({
-  username: z.string().max(20).optional(),
-  password: z.string().max(20).optional(),
-  email: z.string().max(20).optional(),
-  code: z.string().regex(/^\d+$/).optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  email: z.string().optional(),
+  otp: z.string().regex(/^\d+$/).optional(),
 })
 
 // ? Here! Found out some solutions
@@ -217,6 +218,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
+            onLoad={() => console.log('HEYO!')}
             className="flex flex-col gap-[10px]"
           >
             {err && (
@@ -226,8 +228,6 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
               </span>
             )}
             {inputs.map((input, i) => {
-              console.log(input.pattern)
-
               return (
                 <FormField
                   key={i}
@@ -328,10 +328,13 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   modalProps,
   submodalProps,
 }) => {
+  const { onSubmit: modalOnSubmit, ...modalPropsPayload } = modalProps
+  const { onSubmit: submodalOnSubmit, ...submodalPropsPayload } = submodalProps
   const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
   const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
     undefined
   )
+  const [prevData, setPrevData] = useState({})
 
   // useEffect(() => {
   //   console.log('MODAL: ', modalOpened)
@@ -344,19 +347,26 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   return (
     <>
       <AppAuthFormDialog
-        onSubmit={() => {
+        opened={modalOpened}
+        setOpened={setModalOpened}
+        onSubmit={async data => {
+          const otp = await modalOnSubmit(data)
+          if (!otp) {
+            console.log('OTP is invalid')
+            return
+          }
+
+          setPrevData({ ...data, otpOriginal: otp })
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
-        opened={modalOpened}
-        setOpened={setModalOpened}
-        {...modalProps}
+        {...modalPropsPayload}
       />
       <AppAuthFormDialog
-        // onClick={() => setSubmodalOpened(false)}
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
-        {...submodalProps}
+        onSubmit={data => submodalOnSubmit({ ...data, ...prevData })}
+        {...submodalPropsPayload}
       />
     </>
   )

@@ -18,5 +18,9 @@ interface User {}
 declare global {
   namespace Express {
     interface User extends IUser {}
+
+    interface Request {
+      otp?: string
+    }
   }
 }
