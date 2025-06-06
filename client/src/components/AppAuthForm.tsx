@@ -179,14 +179,6 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
   )
 }
 
-// ? Fix validations for another types of dialogs
-const formSchema = z.object({
-  username: z.string().max(100).nonempty().optional(),
-  password: z.string().max(20).nonempty().optional(),
-  email: z.string().max(100).nonempty().optional(),
-  otp: z.string().regex(/^\d+$/).nonempty().optional(),
-})
-
 // ? Here! Found out some solutions
 // Edit password / email / username separate dialog-forms
 export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
@@ -197,9 +189,30 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   errDescription,
   trigger,
   inputs,
+  dirty,
   opened,
   setOpened,
 }) => {
+  const formSchema = z.object({
+    username: z
+      .string()
+      .max(100)
+      .nonempty()
+      .refine(val => val !== dirty?.username, {
+        message: 'The new username cannot be same as yours',
+      })
+      .optional(),
+    password: z.string().max(20).nonempty().optional(),
+    email: z
+      .string()
+      .max(100)
+      .nonempty()
+      .refine(val => val !== dirty?.email, {
+        message: 'The new email cannot be same as yours',
+      })
+      .optional(),
+    otp: z.string().regex(/^\d+$/).nonempty().optional(),
+  })
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
@@ -326,8 +339,16 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   modalProps,
   submodalProps,
 }) => {
-  const { onSubmit: modalOnSubmit, ...modalPropsPayload } = modalProps
-  const { onSubmit: submodalOnSubmit, ...submodalPropsPayload } = submodalProps
+  const {
+    onSubmit: modalOnSubmit,
+    submitProps: modalSubmitProps,
+    ...modalPropsPayload
+  } = modalProps
+  const {
+    onSubmit: submodalOnSubmit,
+    submitProps: submodalSubmitProps,
+    ...submodalPropsPayload
+  } = submodalProps
 
   const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
   const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
@@ -357,7 +378,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         opened={modalOpened}
         setOpened={setModalOpened}
         onSubmit={async data => {
-          const res = await modalOnSubmit(data)
+          const res = await modalOnSubmit(data, ...(modalSubmitProps ?? []))
           if (!res.answer) {
             setModalErr({
               err: true,
@@ -376,7 +397,10 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
         onSubmit={async data => {
-          const res = await submodalOnSubmit({ ...data, ...prevData })
+          const res = await submodalOnSubmit(
+            { ...data, ...prevData },
+            ...(submodalSubmitProps ?? [])
+          )
           if (!res.answer) {
             setSubmodalErr({
               err: true,

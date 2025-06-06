@@ -61,7 +61,9 @@ export default {
   UpdateCurrent: async (req: Request, res: Response) => {
     try {
       // console.log(req.body.otp, req.query.otp)
-      if (!req.query.otp || req.body.otp !== req.query.otp) {
+
+      let { id, otp, otpOriginal, password, ...bodyPayload } = req.body
+      if (req.query?.withOtp === 'true' && otp !== otpOriginal) {
         res.status(400).json({
           message: 'OTP is invalid',
           answer: null,
@@ -69,14 +71,41 @@ export default {
         return
       }
 
-      const { otp, ...bodyPayload } = req.body
+      if (!req.query?.withOtp) {
+        const [rows] = await pool.query<IUser[]>(
+          'SELECT * FROM Users WHERE Id = ?;',
+          [id]
+        )
+
+        const status = await bcrypt.compare(password, rows[0]!.Password)
+        if (!status) {
+          res.status(400).json({
+            message: 'Password is invalid',
+            answer: null,
+          })
+          return
+        }
+      }
+
+      bodyPayload = {
+        ...bodyPayload,
+        ...(password ? { password: password } : {}),
+      }
+      if (bodyPayload['password']) {
+        const salt = await bcrypt.genSalt(10)
+        bodyPayload['password'] = await bcrypt.hash(
+          bodyPayload['password'],
+          salt
+        )
+      }
+
       const keys = Object.keys(bodyPayload)
-      const fields = keys.map(
-        key => key.charAt(0).toUpperCase() + key.substring(1)
-      )
-      const values = keys.map(key => req.body[key])
-      const clause = fields.map(field => `${field} = ?`).join(', ')
-      const [rows] = await pool.query<ResultSetHeader>(
+      const values = await keys.map(key => bodyPayload[key])
+      const clause = keys
+        .map(key => `${key.charAt(0).toUpperCase() + key.substring(1)} = ?`)
+        .join(',')
+
+      const [rows2] = await pool.query<ResultSetHeader>(
         `
         UPDATE Users SET ${clause}
         WHERE Id = ?;
@@ -84,7 +113,7 @@ export default {
         [...values, req.user!.Id]
       )
 
-      if (!rows.affectedRows) {
+      if (!rows2.affectedRows) {
         res.status(404).json({
           message: 'User has not been found',
           answer: null,
@@ -92,12 +121,12 @@ export default {
         return
       }
 
-      const [rows2] = await pool.query<IUser[]>(
+      const [rows3] = await pool.query<IUser[]>(
         'SELECT * FROM Users WHERE Id = ?;',
         [req.user!.Id]
       )
 
-      req.session!.passport!.user = rows2[0]
+      req.session!.passport!.user = rows3[0]
       req.session.save(err => {
         if (err) {
           console.log(err)
@@ -106,7 +135,7 @@ export default {
 
       res.status(200).json({
         message: 'User has been successfully updated',
-        answer: rows2[0],
+        answer: rows3[0],
       })
     } catch (err) {
       console.log(err)

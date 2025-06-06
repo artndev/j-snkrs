@@ -30,6 +30,7 @@ declare global {
   }
 
   export interface IAuthFormData {
+    id?: number
     username: string
     password: string
     email?: string

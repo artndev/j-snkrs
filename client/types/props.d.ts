@@ -13,6 +13,7 @@ declare global {
     formTitle: string
     formDescription: string
     onSubmit: (...args) => any
+    submitProps?: any[]
     err?: boolean
     errDescription?: string
     trigger?: React.ReactNode
@@ -25,6 +26,10 @@ declare global {
       placeholder?: string
       defaultValue?: string | undefined
     }[]
+    dirty?: {
+      username?: string
+      email?: string
+    }
     opened: boolean | undefined
     setOpened: (...args) => void
   }

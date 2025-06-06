@@ -4,7 +4,7 @@ import mailer from '../mailer.js'
 
 const router = express.Router()
 
-router.put('/update', usersController.UpdateCurrent) // ?otp=
+router.put('/update', usersController.UpdateCurrent) // ?withOtp= ?otp=
 
 router.post('/otp', mailer.sendOTP, (req, res) => {
   res.status(200).json({

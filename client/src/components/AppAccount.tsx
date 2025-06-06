@@ -64,10 +64,11 @@ const AppAccount: React.FC<IAccountProps> = ({
 
   const updateCurrent = async (data: IAuthFormData) => {
     try {
-      const { otpOriginal, ...dataPayload } = data
+      data = { ...data, id: auth!.Id }
+      const { otpOriginal } = data // otpOriginal can be undefined
 
       const res = await axios
-        .put(`/api/auth/update?otp=${otpOriginal}`, dataPayload)
+        .put(`/api/auth/update${otpOriginal ? `?withOtp=true` : ''}`, data)
         .then(res => {
           window.location.href = window.location.href
 
@@ -98,14 +99,11 @@ const AppAccount: React.FC<IAccountProps> = ({
 
   const sendOTP = async (data: IAuthFormData) => {
     try {
-      if (data.email === auth!.Email)
-        return {
-          message: 'The new email is same to yours',
-          answer: null,
-        }
-
       const res = await axios
-        .post('/api/auth/otp', JSON.stringify(data))
+        .post(
+          '/api/auth/otp',
+          JSON.stringify({ email: data?.email ?? auth!.Email })
+        )
         .catch(err => {
           console.log(err)
 
@@ -129,6 +127,12 @@ const AppAccount: React.FC<IAccountProps> = ({
     }
   }
 
+  const fakeSubmit = () => {
+    return {
+      answer: true,
+    }
+  }
+
   // useEffect(() => {
   //   console.log(opened)
   // }, [opened])
@@ -143,31 +147,44 @@ const AppAccount: React.FC<IAccountProps> = ({
         <CardContent className="gap-[10px]">
           <ul className="flex flex-col gap-[10px]">
             <li className="flex items-center gap-[10px]">
-              {/* <AppAuthFormDialog
-                formTitle="Edit profile"
-                formDescription="Make changes to your profile here. Click submit when you are done"
-                err={false}
-                onSubmit={updateCurrent}
-                trigger={
-                  <Button size={'icon'}>
-                    <Pencil />
-                  </Button>
-                }
-                inputs={[
-                  {
-                    name: 'username',
-                    label: 'Username',
-                    description: (
-                      <span>
-                        Cannot be started with a digit. Must contain 5 to 20
-                        characters without spaces: <em>a-z/0-9/_</em>
-                      </span>
+              {auth && (
+                <AppAuthFormDialogs
+                  modalProps={{
+                    onSubmit: fakeSubmit,
+                    formTitle: 'Edit profile',
+                    formDescription:
+                      'Make changes to your profile here. Click the submit button when you are done',
+                    trigger: (
+                      <Button size={'icon'}>
+                        <Pencil />
+                      </Button>
                     ),
-                    pattern: '^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$',
-                    defaultValue: auth?.Username,
-                  },
-                ]}
-              /> */}
+                    inputs: [
+                      {
+                        name: 'username',
+                        label: 'Username',
+                        defaultValue: auth!.Username,
+                      },
+                    ],
+                    dirty: {
+                      username: auth!.Username,
+                    },
+                  }}
+                  submodalProps={{
+                    onSubmit: updateCurrent,
+                    formTitle: 'Confirm changes',
+                    formDescription:
+                      'Write your current password to identify yourself',
+                    inputs: [
+                      {
+                        type: 'password',
+                        name: 'password',
+                        label: 'Password',
+                      },
+                    ],
+                  }}
+                />
+              )}
               <span>
                 Username: <strong>{username ?? 'guest'}</strong>
               </span>
@@ -179,7 +196,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                     onSubmit: sendOTP,
                     formTitle: 'Edit profile',
                     formDescription:
-                      'Make changes to your profile here. Click submit when you are done',
+                      'Make changes to your profile here. Click the submit button when you are done',
                     trigger: (
                       <Button size={'icon'}>
                         <Pencil />
@@ -193,12 +210,14 @@ const AppAccount: React.FC<IAccountProps> = ({
                         defaultValue: auth!.Email,
                       },
                     ],
+                    dirty: {
+                      email: auth!.Email,
+                    },
                   }}
                   submodalProps={{
                     onSubmit: updateCurrent,
-                    formTitle: 'Verify the new email',
-                    formDescription:
-                      'In few seconds you will receive the email with the confirmation link. Check your email box and click submit when you are done',
+                    formTitle: 'Verify email',
+                    formDescription: `In few seconds you will receive the verification link. Do not forget to check your email box, and afterwards click the submit button`,
                     inputs: [
                       {
                         type: 'otp',
