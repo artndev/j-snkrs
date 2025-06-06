@@ -192,7 +192,6 @@ const formSchema = z.object({
 export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   formTitle,
   formDescription,
-  onClick,
   onSubmit,
   err,
   errDescription,
@@ -205,6 +204,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   })
+  const { handleSubmit, formState } = form
   const [inputType, setInputType] = useState('password')
 
   return (
@@ -217,7 +217,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-[10px]"
           >
             {err && (
@@ -242,53 +242,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
                       {input?.description && (
                         <FormDescription>{input.description}</FormDescription>
                       )}
-                      {!input.isOTP ? (
-                        <>
-                          {input?.type !== 'password' ? (
-                            <FormControl>
-                              <Input
-                                type={input?.type ?? 'text'}
-                                placeholder={
-                                  input?.placeholder ??
-                                  `Enter your ${input.name}...`
-                                }
-                                {...field}
-                              />
-                            </FormControl>
-                          ) : (
-                            <div className="relative">
-                              <FormControl>
-                                <Input
-                                  type={inputType}
-                                  placeholder={
-                                    input?.placeholder ??
-                                    `Enter your ${input.name}...`
-                                  }
-                                  {...field}
-                                />
-                              </FormControl>
-                              <button
-                                className="password__input-btn closed"
-                                type="button"
-                                onClick={e => {
-                                  const target = e.target as HTMLButtonElement
-
-                                  if (target.classList.contains('closed')) {
-                                    target.classList.remove('closed')
-                                    target.classList.add('opened')
-                                    setInputType('text')
-                                    return
-                                  }
-
-                                  target.classList.remove('opened')
-                                  target.classList.add('closed')
-                                  setInputType('password')
-                                }}
-                              />
-                            </div>
-                          )}
-                        </>
-                      ) : (
+                      {input?.type === 'otp' && (
                         <InputOTP maxLength={6} {...field}>
                           <InputOTPGroup>
                             <InputOTPSlot index={0} />
@@ -303,6 +257,50 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
                           </InputOTPGroup>
                         </InputOTP>
                       )}
+                      {input?.type === 'password' && (
+                        <div className="relative">
+                          <FormControl>
+                            <Input
+                              type={inputType}
+                              placeholder={
+                                input?.placeholder ??
+                                `Enter your ${input.name}...`
+                              }
+                              {...field}
+                            />
+                          </FormControl>
+                          <button
+                            className="password__input-btn closed"
+                            type="button"
+                            onClick={e => {
+                              const target = e.target as HTMLButtonElement
+
+                              if (target.classList.contains('closed')) {
+                                target.classList.remove('closed')
+                                target.classList.add('opened')
+                                setInputType('text')
+                                return
+                              }
+
+                              target.classList.remove('opened')
+                              target.classList.add('closed')
+                              setInputType('password')
+                            }}
+                          />
+                        </div>
+                      )}
+                      {input?.type !== 'otp' && input?.type !== 'password' && (
+                        <FormControl>
+                          <Input
+                            type={input?.type ?? 'text'}
+                            placeholder={
+                              input?.placeholder ??
+                              `Enter your ${input.name}...`
+                            }
+                            {...field}
+                          />
+                        </FormControl>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -313,7 +311,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" onClick={onClick}>
+              <Button type="submit" disabled={formState.isSubmitting}>
                 Submit
               </Button>
             </DialogFooter>
@@ -337,11 +335,11 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   )
 
   const [modalErr, setModalErr] = useState<
-    { err: boolean; errDescription: string } | undefined
-  >(undefined)
+    { err: boolean; errDescription: string } | {}
+  >({})
   const [submodalErr, setSubmodalErr] = useState<
-    { err: boolean; errDescription: string } | undefined
-  >(undefined)
+    { err: boolean; errDescription: string } | {}
+  >({})
 
   const [prevData, setPrevData] = useState({})
 
@@ -372,8 +370,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
           setModalOpened(false)
           setSubmodalOpened(true)
         }}
-        {...modalPropsPayload}
-        {...(modalErr?.err ? modalErr : {})}
+        {...{ ...modalPropsPayload, ...modalErr }}
       />
       <AppAuthFormDialog
         opened={submodalOpened}
@@ -387,8 +384,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
             })
           }
         }}
-        {...submodalPropsPayload}
-        {...(submodalErr?.err ? submodalErr : {})}
+        {...{ ...submodalPropsPayload, ...submodalErr }}
       />
     </>
   )

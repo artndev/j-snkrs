@@ -12,17 +12,15 @@ declare global {
   export interface IAuthFormDialogProps {
     formTitle: string
     formDescription: string
-    onClick?: (...args) => any
     onSubmit: (...args) => any
-    err: boolean
+    err?: boolean
     errDescription?: string
     trigger?: React.ReactNode
     inputs: {
-      isOTP?: boolean
       name: 'otp' | 'email' | 'username' | 'password'
       label: string
       description?: React.ReactNode
-      type?: 'text' | 'password' | 'email'
+      type?: 'otp' | 'email' | 'text' | 'password'
       pattern?: RegExp
       placeholder?: string
       defaultValue?: string | undefined
@@ -32,10 +30,13 @@ declare global {
   }
 
   export interface IAuthFormDialogsProps {
-    modalProps: Omit<IAuthFormDialogProps, 'opened' | 'setOpened'>
+    modalProps: Omit<
+      IAuthFormDialogProps,
+      'opened' | 'setOpened' | 'err' | 'errDescription'
+    >
     submodalProps: Omit<
       IAuthFormDialogProps,
-      'onClick' | 'opened' | 'setOpened'
+      'opened' | 'setOpened' | 'err' | 'errDescription'
     >
   }
 

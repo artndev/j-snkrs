@@ -180,7 +180,6 @@ const AppAccount: React.FC<IAccountProps> = ({
                     formTitle: 'Edit profile',
                     formDescription:
                       'Make changes to your profile here. Click submit when you are done',
-                    err: false,
                     trigger: (
                       <Button size={'icon'}>
                         <Pencil />
@@ -200,10 +199,9 @@ const AppAccount: React.FC<IAccountProps> = ({
                     formTitle: 'Verify the new email',
                     formDescription:
                       'In few seconds you will receive the email with the confirmation link. Check your email box and click submit when you are done',
-                    err: false,
                     inputs: [
                       {
-                        isOTP: true,
+                        type: 'otp',
                         name: 'otp',
                         label: 'Code',
                         pattern: /^\d+$/,
