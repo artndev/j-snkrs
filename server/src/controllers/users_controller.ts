@@ -142,16 +142,13 @@ export default {
     }
   },
   DeleteCurrent: async (req: Request, res: Response) => {
-    await pool.query<ResultSetHeader>(
-      `
-        DELETE Saves, Checks
-        FROM Saves
-        JOIN Checks ON 
-        Saves.UserId = Checks.UserId
-        WHERE Saves.UserId = ?;
-      `,
-      [req.user!.Id]
-    )
+    await pool.query<ResultSetHeader>('DELETE FROM Checks WHERE UserId = ?;', [
+      req.user!.Id,
+    ])
+
+    await pool.query<ResultSetHeader>('DELETE FROM Saves WHERE UserId = ?;', [
+      req.user!.Id,
+    ])
 
     const [rows] = await pool.query<ResultSetHeader>(
       'DELETE FROM Users WHERE Id = ?;',
