@@ -138,8 +138,8 @@ const AppAccount: React.FC<IAccountProps> = ({
   // }, [opened])
 
   return (
-    <div className="flex flex-col gap-[20px] w-[min(1000px,_100%)]">
-      <Card className="gap-[20px]">
+    <div className="flex flex-col gap-[20px] w-full max-w-[min(1000px,_100%)]">
+      <Card className="gap-[20px] break-all">
         <CardHeader>
           <CardTitle>Account Info</CardTitle>
           <CardDescription>The description of your personality</CardDescription>
@@ -204,6 +204,47 @@ const AppAccount: React.FC<IAccountProps> = ({
                     ),
                     inputs: [
                       {
+                        type: 'password',
+                        name: 'password',
+                        label: 'Password',
+                      },
+                    ],
+                  }}
+                  submodalProps={{
+                    onSubmit: updateCurrent,
+                    formTitle: 'Confirm changes',
+                    formDescription:
+                      'In few seconds you will receive the confirmation code. Do not forget to check your email box, and afterwards click the submit button',
+                    inputs: [
+                      {
+                        type: 'otp',
+                        name: 'otp',
+                        label: 'Code',
+                        pattern: /^\d+$/,
+                      },
+                    ],
+                  }}
+                />
+              )}
+              <span>
+                Password: <strong>***</strong>
+              </span>
+            </li>
+            <li className="flex items-center gap-[10px]">
+              {auth && (
+                <AppAuthFormDialogs
+                  modalProps={{
+                    onSubmit: sendOTP,
+                    formTitle: 'Edit profile',
+                    formDescription:
+                      'Make changes to your profile here. Click the submit button when you are done',
+                    trigger: (
+                      <Button size={'icon'}>
+                        <Pencil />
+                      </Button>
+                    ),
+                    inputs: [
+                      {
                         type: 'email',
                         name: 'email',
                         label: 'Email',
@@ -217,7 +258,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                   submodalProps={{
                     onSubmit: updateCurrent,
                     formTitle: 'Verify email',
-                    formDescription: `In few seconds you will receive the verification link. Do not forget to check your email box, and afterwards click the submit button`,
+                    formDescription: `In few seconds you will receive the verification code. Do not forget to check your email box, and afterwards click the submit button`,
                     inputs: [
                       {
                         type: 'otp',
@@ -231,14 +272,7 @@ const AppAccount: React.FC<IAccountProps> = ({
               )}
               <span>
                 Email: <strong>{email ?? 'unknown'}</strong>
-              </span>{' '}
-              {!verified ? (
-                <span className="italic text-(--destructive)">
-                  (not verified)
-                </span>
-              ) : (
-                <span className="italic text-green-500">(verified)</span>
-              )}
+              </span>
             </li>
           </ul>
         </CardContent>
@@ -268,7 +302,7 @@ const AppAccount: React.FC<IAccountProps> = ({
           </Dialog>
         </CardFooter>
       </Card>
-      <Card className="gap-[10px]">
+      <Card className="gap-[10px] break-all">
         <CardHeader>
           <CardTitle>Socials</CardTitle>
           <CardDescription>
@@ -332,7 +366,7 @@ const AppAccount: React.FC<IAccountProps> = ({
           </ul>
         </CardContent>
       </Card>
-      <Card className="gap-[10px]">
+      <Card className="gap-[10px] break-all">
         <CardHeader>
           <CardTitle>Saves</CardTitle>
           <CardDescription>The list of your SNKRS besties</CardDescription>

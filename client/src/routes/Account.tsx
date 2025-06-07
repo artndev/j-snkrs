@@ -19,7 +19,7 @@ const Account = () => {
   }, [])
 
   return (
-    <div className="flex justify-center h-screen p-[20px]">
+    <div className="flex justify-center w-full h-screen p-[20px]">
       <AppAccount
         id={auth?.Id}
         username={auth?.Username}
