@@ -1,10 +1,12 @@
 export {}
+import React from 'react'
 
 declare global {
   export interface IAuthFormProps {
     formTitle: string
-    onSubmit: (...args) => void
-    err: boolean
+    onSubmit: (...args) => any
+    err?: boolean
+    errDescription?: string | React.ReactNode
     withEmail?: boolean
     withSocials?: boolean
   }
@@ -14,16 +16,16 @@ declare global {
     formDescription: string
     onSubmit: (...args) => any
     err?: boolean
-    errDescription?: string
+    errDescription?: string | React.ReactNode
     trigger?: React.ReactNode
     inputs: {
       name: 'email' | 'username' | 'password' | 'confirmPassword' | 'otp'
       label: string
-      description?: React.ReactNode
+      description?: string | React.ReactNode
       type?: 'otp' | 'email' | 'text' | 'password'
       pattern?: RegExp
       placeholder?: string
-      defaultValue?: string | undefined
+      defaultValue?: string | undefined // because of unauthorized users
     }[]
     dirtyValues?: {
       username?: string

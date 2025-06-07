@@ -29,20 +29,45 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import config from '../config.json'
-import axios from '../axios.js'
+import regexes from '../regexes.js'
 
 const AppAuthForm: React.FC<IAuthFormProps> = ({
   formTitle,
   onSubmit,
   err,
+  errDescription,
   withEmail,
   withSocials,
 }) => {
-  const form = useForm()
+  const formSchema = z.object({
+    username: z
+      .string()
+      .nonempty()
+      .min(5)
+      .max(20)
+      .regex(regexes.USERNAME_REGEX)
+      .optional(),
+    email: z.string().nonempty().email().optional(),
+    password: z
+      .string()
+      .nonempty()
+      .min(5)
+      .max(20)
+      .regex(regexes.PASSWORD_REGEX)
+      .optional(),
+
+    otp: z.string().nonempty().length(6).regex(/^\d+$/).optional(),
+  })
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    mode: 'onChange',
+    resolver: zodResolver(formSchema),
+  })
+
   const [inputType, setInputType] = useState('password')
 
   return (
@@ -51,18 +76,21 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-[10px] w-[min(350px,_100%)]"
       >
-        <span className="leading-none text-xl font-bold mb-[10px]">
+        <span className="text-xl font-bold leading-none mb-[10px]">
           {formTitle}
         </span>
         {err && (
-          <span className="italic text-(--destructive)">
-            This username has already been taken or your credentials are
-            incorrect
+          <span className="text-destructive text-sm">
+            {errDescription ??
+              'This username has already been taken or your credentials are invalid'}
           </span>
         )}
         <FormField
           control={form.control}
           name="username"
+          rules={{
+            required: true,
+          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
@@ -71,12 +99,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                 without spaces: <em>a-z/0-9/_</em>
               </FormDescription>
               <FormControl>
-                <Input
-                  pattern="^(?=.*[a-z])(?=[a-z_]+[a-z0-9_])[a-z0-9_]{5,20}$"
-                  placeholder="Enter your username.."
-                  required
-                  {...field}
-                />
+                <Input placeholder="Enter your username..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,6 +108,9 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
         <FormField
           control={form.control}
           name="password"
+          rules={{
+            required: true,
+          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
@@ -96,9 +122,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                 <FormControl>
                   <Input
                     type={inputType}
-                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_.!@#$%^&*])[a-zA-Z0-9_.!@#$%^&*]{5,20}$"
-                    placeholder="Enter your password.."
-                    required
+                    placeholder="Enter your password..."
                     {...field}
                   />
                 </FormControl>
@@ -129,6 +153,9 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
           <FormField
             control={form.control}
             name="email"
+            rules={{
+              required: true,
+            }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -136,7 +163,6 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                   <Input
                     type="email"
                     placeholder="Enter your email.."
-                    required
                     {...field}
                   />
                 </FormControl>
@@ -153,7 +179,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                 className="flex-1"
                 href={`${config.SERVER_URL}/api/google/login`}
               >
-                <Button className="w-[100%]" type="button" variant={'outline'}>
+                <Button className="w-full" type="button" variant={'outline'}>
                   <FontAwesomeIcon icon={faGoogle} />
                   Google
                 </Button>
@@ -163,7 +189,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
                 className="flex-1"
                 href={`${config.SERVER_URL}/api/github/login`}
               >
-                <Button className="w-[100%]" type="button" variant={'outline'}>
+                <Button className="w-full" type="button" variant={'outline'}>
                   <FontAwesomeIcon icon={faGithub} />
                   Github
                 </Button>
@@ -171,7 +197,11 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
             </div>
           </>
         )}
-        <Button className="w-full mt-[10px]" type="submit">
+        <Button
+          className="w-full mt-[10px]"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
           Submit
         </Button>
       </form>
@@ -179,8 +209,6 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
   )
 }
 
-// ? Here! Found out some solutions
-// Edit password / email / username separate dialog-forms
 export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   formTitle,
   formDescription,
@@ -196,32 +224,45 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   const formSchema = z.object({
     username: z
       .string()
-      .max(100)
       .nonempty()
+      .min(5)
+      .max(20)
+      .regex(regexes.USERNAME_REGEX)
       .refine(val => val !== dirtyValues?.username, {
         message: 'The new username cannot be same as yours',
       })
       .optional(),
     email: z
       .string()
-      .max(100)
       .nonempty()
+      .email()
       .refine(val => val !== dirtyValues?.email, {
         message: 'The new email cannot be same as yours',
       })
       .optional(),
 
-    password: z.string().max(20).nonempty().optional(),
-    confirmPassword: z.string().max(20).nonempty().optional(),
+    password: z
+      .string()
+      .nonempty()
+      .min(5)
+      .max(20)
+      .regex(regexes.PASSWORD_REGEX)
+      .optional(),
+    confirmPassword: z
+      .string()
+      .nonempty()
+      .min(5)
+      .max(20)
+      .regex(regexes.PASSWORD_REGEX)
+      .optional(),
 
-    otp: z.string().regex(/^\d+$/).nonempty().optional(),
+    otp: z.string().nonempty().length(6).regex(/^\d+$/).optional(),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   })
-  const { handleSubmit, formState } = form
 
   const [inputType, setInputType] = useState('password')
 
@@ -235,13 +276,13 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-[10px]"
           >
             {err && (
               <span className="text-destructive text-sm">
                 {errDescription ??
-                  'This username has already been taken or your credentials are incorrect'}
+                  'This username has already been taken or your credentials are invalid'}
               </span>
             )}
             {inputs.map((input, i) => {
@@ -329,7 +370,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" disabled={formState.isSubmitting}>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
                 Submit
               </Button>
             </DialogFooter>

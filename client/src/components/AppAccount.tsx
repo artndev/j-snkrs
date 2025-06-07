@@ -65,10 +65,9 @@ const AppAccount: React.FC<IAccountProps> = ({
   const updateCurrent = async (data: IAuthFormData) => {
     try {
       data = { ...data, id: auth!.Id }
-      const { confirmOtp } = data // otpOriginal can be undefined
 
       const res = await axios
-        .put(`/api/auth/update${confirmOtp ? `?withOtp=true` : ''}`, data)
+        .put(`/api/auth/update${data?.confirmOtp ? `?withOtp=true` : ''}`, data)
         .then(res => {
           window.location.href = window.location.href
 
@@ -163,6 +162,12 @@ const AppAccount: React.FC<IAccountProps> = ({
                       {
                         name: 'username',
                         label: 'Username',
+                        description: (
+                          <span>
+                            Cannot be started with a digit. Must contain 5 to 20
+                            characters without spaces: <em>a-z/0-9/_</em>
+                          </span>
+                        ),
                         defaultValue: auth!.Username,
                       },
                     ],
@@ -207,6 +212,14 @@ const AppAccount: React.FC<IAccountProps> = ({
                         type: 'password',
                         name: 'password',
                         label: 'Password',
+                        description: (
+                          <span>
+                            Must contain 5 to 20 characters without spaces:{' '}
+                            <em>
+                              'a-z', 'A-Z', '0-9' and './_/!/@/#/$/%/^/&/*'
+                            </em>
+                          </span>
+                        ),
                       },
                     ],
                   }}
@@ -220,7 +233,6 @@ const AppAccount: React.FC<IAccountProps> = ({
                         type: 'otp',
                         name: 'otp',
                         label: 'Code',
-                        pattern: /^\d+$/,
                       },
                     ],
                   }}
@@ -273,32 +285,35 @@ const AppAccount: React.FC<IAccountProps> = ({
               <span>
                 Email: <strong>{email ?? 'unknown'}</strong>
               </span>
+              {verified && <span className="text-green-500">(v)</span>}
             </li>
           </ul>
         </CardContent>
         <CardFooter className="gap-[5px]">
           <Dialog>
-            <DialogTrigger>
-              <Button variant={'destructive'}>
-                <Trash2 />
-                <span>Delete my account</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from the server
-                </DialogDescription>
-                <DialogFooter className="mt-[10px]">
-                  <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                  </DialogClose>
-                  <Button type="submit">I am sure</Button>
-                </DialogFooter>
-              </DialogHeader>
-            </DialogContent>
+            <form>
+              <DialogTrigger>
+                <Button variant={'destructive'}>
+                  <Trash2 />
+                  <span>Delete my account</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from the server
+                  </DialogDescription>
+                  <DialogFooter className="mt-[10px]">
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit">I am sure</Button>
+                  </DialogFooter>
+                </DialogHeader>
+              </DialogContent>
+            </form>
           </Dialog>
         </CardFooter>
       </Card>

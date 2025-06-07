@@ -31,7 +31,7 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-[10px] h-[100%] p-[20px] select-none">
+    <div className="flex flex-col items-center justify-center gap-[10px] w-full h-screen p-[20px] select-none">
       <AppAuthForm
         formTitle="Log in"
         onSubmit={onSubmit}

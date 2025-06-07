@@ -1,5 +1,5 @@
 export {}
-import { storeConfig } from '../src/reduxConfig.js'
+import { storeConfig } from '../src/persistor.js'
 
 declare global {
   export type RootState = ReturnType<typeof storeConfig.getState>
