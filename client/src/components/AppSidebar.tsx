@@ -64,9 +64,15 @@ const AppSidebar = () => {
       axios
         .post('/api/auth/logout')
         .then(() => setAuth(undefined))
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }
 

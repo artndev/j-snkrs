@@ -55,6 +55,8 @@ const AppCart = () => {
 
       if (checkout.error) alert(checkout.error.message)
     } catch (err) {
+      alert('Server is not responding')
+
       console.log(err)
     }
   }

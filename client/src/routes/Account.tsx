@@ -15,6 +15,8 @@ const Account = () => {
         .catch(err => console.log(err))
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }, [])
 

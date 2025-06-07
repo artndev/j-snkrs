@@ -15,6 +15,8 @@ const Product = () => {
       .catch(err => {
         console.log(err)
 
+        alert('Server is not responding')
+
         setErr(true)
       })
   }, [])

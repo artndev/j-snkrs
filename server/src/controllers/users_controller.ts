@@ -142,7 +142,7 @@ export default {
     }
   },
   DeleteCurrent: async (req: Request, res: Response) => {
-    const [rows] = await pool.query<ResultSetHeader>(
+    await pool.query<ResultSetHeader>(
       `
         DELETE Saves, Checks
         FROM Saves
@@ -150,6 +150,11 @@ export default {
         Saves.UserId = Checks.UserId
         WHERE Saves.UserId = ?;
       `,
+      [req.user!.Id]
+    )
+
+    const [rows] = await pool.query<ResultSetHeader>(
+      'DELETE FROM Users WHERE Id = ?;',
       [req.user!.Id]
     )
 
@@ -168,8 +173,8 @@ export default {
       }
     })
 
-    res.status(404).json({
-      message: 'User has been successfully updated',
+    res.status(200).json({
+      message: 'User has been successfully deleted',
       answer: true,
     })
   },

@@ -52,9 +52,9 @@ const RegisterForm = () => {
     }, 1000)
   }
 
-  const onSubmit = (data: IAuthFormData) => {
+  const onSubmit = async (data: IAuthFormData) => {
     try {
-      axios
+      await axios
         .post('/api/local/register', {
           destination: JSON.stringify(data),
         })

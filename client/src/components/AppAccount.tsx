@@ -22,11 +22,13 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
 import { AppAuthFormDialogs } from './AppAuthForm.js'
+import { useForm } from 'react-hook-form'
+import { Form } from '@/components/ui/form.js'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -37,27 +39,61 @@ const AppAccount: React.FC<IAccountProps> = ({
   verified,
   saves,
 }) => {
+  const navigator = useNavigate()
+  const form = useForm()
   const { auth, setAuth } = useAuthContext()
 
-  const unattachGoogleId = () => {
+  const unattachGoogleId = async () => {
     try {
-      axios
+      await axios
         .post('/api/google/unattach')
         .then(res => setAuth(res.data.answer))
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }
 
-  const unattachGithubId = () => {
+  const unattachGithubId = async () => {
     try {
-      axios
+      await axios
         .post('/api/github/unattach')
         .then(res => setAuth(res.data.answer))
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
+    }
+  }
+
+  const deleteCurrent = async () => {
+    try {
+      await axios
+        .delete('/api/auth/delete')
+        .then(() => {
+          setAuth(undefined)
+          navigator(0)
+        })
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
+    } catch (err) {
+      console.log(err)
+
+      alert('Server is not responding')
     }
   }
 
@@ -284,9 +320,9 @@ const AppAccount: React.FC<IAccountProps> = ({
             </li>
           </ul>
         </CardContent>
-        <CardFooter className="gap-[5px]">
-          <Dialog>
-            <form>
+        {auth && (
+          <CardFooter className="gap-[5px]">
+            <Dialog>
               <DialogTrigger>
                 <Button variant={'destructive'}>
                   <Trash2 />
@@ -300,17 +336,26 @@ const AppAccount: React.FC<IAccountProps> = ({
                     This action cannot be undone. This will permanently delete
                     your account and remove your data from the server
                   </DialogDescription>
-                  <DialogFooter className="mt-[10px]">
-                    <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit">I am sure</Button>
-                  </DialogFooter>
                 </DialogHeader>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(deleteCurrent)}>
+                    <DialogFooter className="mt-[10px]">
+                      <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </DialogClose>
+                      <Button
+                        type="submit"
+                        disabled={form.formState.isSubmitting}
+                      >
+                        I am sure
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
               </DialogContent>
-            </form>
-          </Dialog>
-        </CardFooter>
+            </Dialog>
+          </CardFooter>
+        )}
       </Card>
       <Card className="gap-[10px] break-all">
         <CardHeader>
@@ -383,7 +428,7 @@ const AppAccount: React.FC<IAccountProps> = ({
         </CardHeader>
         <CardContent className="grid grid-cols-[repeat(3,_1fr)] gap-[10px]">
           {!saves?.length ? (
-            <span>Loading...</span>
+            <span>Here is nothing yet...</span>
           ) : (
             saves.map((save, i) => {
               return (

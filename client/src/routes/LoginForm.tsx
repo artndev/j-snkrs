@@ -9,9 +9,9 @@ const LoginForm = () => {
   const navigator = useNavigate()
   const [err, setErr] = useState<boolean>(false)
 
-  const onSubmit = (data: IAuthFormData) => {
+  const onSubmit = async (data: IAuthFormData) => {
     try {
-      axios
+      await axios
         .post('/api/local/login', data)
         .then(res => {
           setAuth(res.data.answer)

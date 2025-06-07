@@ -15,6 +15,8 @@ const History = () => {
     } catch (err) {
       console.log(err)
 
+      alert('Server is not responding')
+
       setErr(true)
     }
   }, [])
@@ -22,7 +24,9 @@ const History = () => {
   return (
     <>
       {!history?.length || err ? (
-        <div className="flex justify-center p-[20px]">Loading...</div>
+        <div className="flex justify-center p-[20px]">
+          Here is nothing yet...
+        </div>
       ) : (
         <div className="flex justify-center h-screen p-[20px]">
           <AppHistory history={history} />

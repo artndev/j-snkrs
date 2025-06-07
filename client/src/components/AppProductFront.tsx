@@ -28,13 +28,14 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
   sizes,
   image,
 }) => {
-  const navigate = useNavigate()
   const colors: string[] = Object.keys(sizes)
+  const navigate = useNavigate()
   const { auth } = useAuthContext()
   const [variant, setVariant] = useState<IVariant | undefined>(undefined)
   const [color, setColor] = useState<string | undefined>(undefined)
   const [colorImage, setColorImage] = useState<string | undefined>(undefined)
   const [isSaved, setIsSaved] = useState<boolean>(false)
+
   const products = useReduxSelector(state => state.cart.products)
   const dispatch = useReduxDispatch()
 
@@ -66,9 +67,15 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
           setIsSaved(res.data.answer)
           console.log(res)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }, [])
 
@@ -77,9 +84,15 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
       axios
         .post(`/api/saves/${id}/save`)
         .then(() => setIsSaved(true))
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }
 
@@ -88,9 +101,15 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
       axios
         .post(`/api/saves/${id}/unsave`)
         .then(() => setIsSaved(false))
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+
+          alert(err.response.data.message)
+        })
     } catch (err) {
       console.log(err)
+
+      alert('Server is not responding')
     }
   }
 
