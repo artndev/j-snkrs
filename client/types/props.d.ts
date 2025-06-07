@@ -13,12 +13,11 @@ declare global {
     formTitle: string
     formDescription: string
     onSubmit: (...args) => any
-    submitProps?: any[]
     err?: boolean
     errDescription?: string
     trigger?: React.ReactNode
     inputs: {
-      name: 'otp' | 'email' | 'username' | 'password'
+      name: 'email' | 'username' | 'password' | 'confirmPassword' | 'otp'
       label: string
       description?: React.ReactNode
       type?: 'otp' | 'email' | 'text' | 'password'
@@ -26,7 +25,7 @@ declare global {
       placeholder?: string
       defaultValue?: string | undefined
     }[]
-    dirty?: {
+    dirtyValues?: {
       username?: string
       email?: string
     }

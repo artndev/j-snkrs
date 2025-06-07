@@ -35,7 +35,8 @@ declare global {
     password: string
     email?: string
     otp?: string
-    otpOriginal?: string
+    confirmOtp?: string
+    confirmPassword?: string
   }
 
   export interface IVariant {

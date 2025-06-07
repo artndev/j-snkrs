@@ -189,7 +189,7 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
   errDescription,
   trigger,
   inputs,
-  dirty,
+  dirtyValues,
   opened,
   setOpened,
 }) => {
@@ -198,26 +198,31 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
       .string()
       .max(100)
       .nonempty()
-      .refine(val => val !== dirty?.username, {
+      .refine(val => val !== dirtyValues?.username, {
         message: 'The new username cannot be same as yours',
       })
       .optional(),
-    password: z.string().max(20).nonempty().optional(),
     email: z
       .string()
       .max(100)
       .nonempty()
-      .refine(val => val !== dirty?.email, {
+      .refine(val => val !== dirtyValues?.email, {
         message: 'The new email cannot be same as yours',
       })
       .optional(),
+
+    password: z.string().max(20).nonempty().optional(),
+    confirmPassword: z.string().max(20).nonempty().optional(),
+
     otp: z.string().regex(/^\d+$/).nonempty().optional(),
   })
+
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   })
   const { handleSubmit, formState } = form
+
   const [inputType, setInputType] = useState('password')
 
   return (
@@ -339,16 +344,8 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
   modalProps,
   submodalProps,
 }) => {
-  const {
-    onSubmit: modalOnSubmit,
-    submitProps: modalSubmitProps,
-    ...modalPropsPayload
-  } = modalProps
-  const {
-    onSubmit: submodalOnSubmit,
-    submitProps: submodalSubmitProps,
-    ...submodalPropsPayload
-  } = submodalProps
+  const { onSubmit: modalOnSubmit, ...modalPropsPayload } = modalProps
+  const { onSubmit: submodalOnSubmit, ...submodalPropsPayload } = submodalProps
 
   const [modalOpened, setModalOpened] = useState<boolean | undefined>(undefined)
   const [submodalOpened, setSubmodalOpened] = useState<boolean | undefined>(
@@ -364,21 +361,13 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
 
   const [prevData, setPrevData] = useState({})
 
-  // useEffect(() => {
-  //   console.log('MODAL: ', modalOpened)
-  // }, [modalOpened])
-
-  // useEffect(() => {
-  //   console.log('SUBMODAL: ', submodalOpened)
-  // }, [submodalOpened])
-
   return (
     <>
       <AppAuthFormDialog
         opened={modalOpened}
         setOpened={setModalOpened}
         onSubmit={async data => {
-          const res = await modalOnSubmit(data, ...(modalSubmitProps ?? []))
+          const res = await modalOnSubmit(data)
           if (!res.answer) {
             setModalErr({
               err: true,
@@ -397,10 +386,7 @@ export const AppAuthFormDialogs: React.FC<IAuthFormDialogsProps> = ({
         opened={submodalOpened}
         setOpened={setSubmodalOpened}
         onSubmit={async data => {
-          const res = await submodalOnSubmit(
-            { ...data, ...prevData },
-            ...(submodalSubmitProps ?? [])
-          )
+          const res = await submodalOnSubmit({ ...data, ...prevData })
           if (!res.answer) {
             setSubmodalErr({
               err: true,

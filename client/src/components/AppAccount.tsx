@@ -65,10 +65,10 @@ const AppAccount: React.FC<IAccountProps> = ({
   const updateCurrent = async (data: IAuthFormData) => {
     try {
       data = { ...data, id: auth!.Id }
-      const { otpOriginal } = data // otpOriginal can be undefined
+      const { confirmOtp } = data // otpOriginal can be undefined
 
       const res = await axios
-        .put(`/api/auth/update${otpOriginal ? `?withOtp=true` : ''}`, data)
+        .put(`/api/auth/update${confirmOtp ? `?withOtp=true` : ''}`, data)
         .then(res => {
           window.location.href = window.location.href
 
@@ -80,11 +80,9 @@ const AppAccount: React.FC<IAccountProps> = ({
           return err
         })
 
+      const message = res.data?.message ?? res?.response.data.message
       return {
-        message:
-          res.data?.message ??
-          res?.response.data.message ??
-          'Message has not been provided',
+        message: message ?? 'Message has not been provided',
         answer: res.data?.answer,
       }
     } catch (err) {
@@ -110,12 +108,14 @@ const AppAccount: React.FC<IAccountProps> = ({
           return err
         })
 
+      const message = res.data?.message ?? res?.response.data.message
       return {
-        message:
-          res.data?.message ??
-          res?.response.data.message ??
-          'Message has not been provided',
-        answer: res.data?.answer,
+        message: message ?? 'Message has not been provided',
+        answer: res.data?.answer
+          ? {
+              confirmOtp: res.data?.answer.otp,
+            }
+          : null,
       }
     } catch (err) {
       console.log(err)
@@ -166,7 +166,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                         defaultValue: auth!.Username,
                       },
                     ],
-                    dirty: {
+                    dirtyValues: {
                       username: auth!.Username,
                     },
                   }}
@@ -178,7 +178,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                     inputs: [
                       {
                         type: 'password',
-                        name: 'password',
+                        name: 'confirmPassword',
                         label: 'Password',
                       },
                     ],
@@ -210,7 +210,7 @@ const AppAccount: React.FC<IAccountProps> = ({
                         defaultValue: auth!.Email,
                       },
                     ],
-                    dirty: {
+                    dirtyValues: {
                       email: auth!.Email,
                     },
                   }}

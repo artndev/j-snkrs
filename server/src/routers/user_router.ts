@@ -10,7 +10,7 @@ router.post('/otp', mailer.sendOTP, (req, res) => {
   res.status(200).json({
     message: 'OTP has been successfully sent',
     answer: {
-      otpOriginal: req.otp,
+      otp: req.otp,
     },
   })
 })

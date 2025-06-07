@@ -62,10 +62,10 @@ export default {
     try {
       // console.log(req.body.otp, req.query.otp)
 
-      let { id, otp, otpOriginal, password, ...bodyPayload } = req.body
-      if (req.query?.withOtp === 'true' && otp !== otpOriginal) {
+      let { id, otp, confirmOtp, confirmPassword, ...bodyPayload } = req.body
+      if (req.query?.withOtp === 'true' && otp !== confirmOtp) {
         res.status(400).json({
-          message: 'OTP is invalid',
+          message: 'Confirmation OTP is invalid',
           answer: null,
         })
         return
@@ -77,20 +77,16 @@ export default {
           [id]
         )
 
-        const status = await bcrypt.compare(password, rows[0]!.Password)
+        const status = await bcrypt.compare(confirmPassword, rows[0]!.Password)
         if (!status) {
           res.status(400).json({
-            message: 'Password is invalid',
+            message: 'Confirmation password is invalid',
             answer: null,
           })
           return
         }
       }
 
-      bodyPayload = {
-        ...bodyPayload,
-        ...(password ? { password: password } : {}),
-      }
       if (bodyPayload['password']) {
         const salt = await bcrypt.genSalt(10)
         bodyPayload['password'] = await bcrypt.hash(
