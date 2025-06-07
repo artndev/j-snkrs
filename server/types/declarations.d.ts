@@ -13,8 +13,6 @@ declare module 'express-session' {
 
 declare module 'passport-magic-link' {}
 
-interface User {}
-
 declare global {
   namespace Express {
     interface User extends IUser {}

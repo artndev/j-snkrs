@@ -35,7 +35,7 @@ declare global {
   export interface IUser extends ResultSetHeader {
     Id: number
     Username: string
-    Password: string
+    Password?: string // to prevent sending it to client
     Email: string
     GoogleId: string | null
     GithubId: string | null

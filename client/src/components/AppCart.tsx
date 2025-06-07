@@ -25,6 +25,7 @@ import { Button } from './ui/button'
 const AppCart = () => {
   const navigate = useNavigate()
   const { auth } = useAuthContext()
+
   const totalPrice = useReduxSelector(getTotalPrice)
   const products = useReduxSelector(getProducts)
   const dispatch = useReduxDispatch()

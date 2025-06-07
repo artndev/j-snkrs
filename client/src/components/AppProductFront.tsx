@@ -99,7 +99,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
       <Card className="overflow-hidden">
         <CardContent>
           <img
-            src={colorImage || image}
+            src={colorImage ?? image}
             alt="CardHeader"
             className="object-cover w-full rounded-xl"
           />
@@ -192,7 +192,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
                 size={'icon'}
                 onClick={() => {
                   const totalQuantity =
-                    (products[id]?.[JSON.stringify(variant)]?.quantity || 1) - 1
+                    (products[id]?.[JSON.stringify(variant)]?.quantity ?? 1) - 1
                   dispatch(
                     removeProduct({
                       id: id,
@@ -219,7 +219,7 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
               className="flex-1"
               onClick={() => {
                 const totalQuantity =
-                  (products[id]?.[JSON.stringify(variant)]?.quantity || 0) + 1
+                  (products[id]?.[JSON.stringify(variant)]?.quantity ?? 0) + 1
                 dispatch(
                   addProduct({
                     id: id,

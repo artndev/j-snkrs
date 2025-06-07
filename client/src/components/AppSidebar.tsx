@@ -97,7 +97,7 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <span>{auth?.Username || 'guest'}</span>
+                  <span>{auth?.Username ?? 'guest'}</span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

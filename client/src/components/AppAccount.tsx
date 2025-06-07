@@ -22,12 +22,11 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons/faGoogle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import axios from '../axios.js'
 import config from '../config.json'
 import { AppAuthFormDialogs } from './AppAuthForm.js'
-import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 
 const AppAccount: React.FC<IAccountProps> = ({
   id,
@@ -131,10 +130,6 @@ const AppAccount: React.FC<IAccountProps> = ({
       answer: true,
     }
   }
-
-  // useEffect(() => {
-  //   console.log(opened)
-  // }, [opened])
 
   return (
     <div className="flex flex-col gap-[20px] w-full max-w-[min(1000px,_100%)]">

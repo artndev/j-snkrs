@@ -24,9 +24,10 @@ export default {
         [credentials.username]
       )
 
+      const { Password, ...userPayload } = rows[0]!
       return {
         message: 'You have successfully authorized',
-        answer: rows[0],
+        answer: userPayload,
       }
     } catch (err) {
       console.log(err)
@@ -44,13 +45,13 @@ export default {
       if (!rows.length)
         throw new Error('Your authorization credentials are invalid')
 
-      const passwordHash = rows[0]!.Password
-      const status = await bcrypt.compare(credentials.password, passwordHash)
+      const { Password, ...userPayload } = rows[0]!
+      const status = await bcrypt.compare(credentials.password, Password!)
       if (!status) throw new Error('Your authorization credentials are invalid')
 
       return {
         message: 'You have successfully authorized',
-        answer: rows[0],
+        answer: userPayload,
       }
     } catch (err) {
       console.log(err)
@@ -60,8 +61,6 @@ export default {
   },
   UpdateCurrent: async (req: Request, res: Response) => {
     try {
-      // console.log(req.body.otp, req.query.otp)
-
       let { id, otp, confirmOtp, confirmPassword, ...bodyPayload } = req.body
       if (req.query?.withOtp === 'true' && otp !== confirmOtp) {
         res.status(400).json({
@@ -77,7 +76,7 @@ export default {
           [id]
         )
 
-        const status = await bcrypt.compare(confirmPassword, rows[0]!.Password)
+        const status = await bcrypt.compare(confirmPassword, rows[0]!.Password!)
         if (!status) {
           res.status(400).json({
             message: 'Confirmation password is invalid',
@@ -131,7 +130,7 @@ export default {
 
       res.status(200).json({
         message: 'User has been successfully updated',
-        answer: rows3[0],
+        answer: true, // because modals update href
       })
     } catch (err) {
       console.log(err)
@@ -184,7 +183,7 @@ export default {
         [data.googleId]
       )
 
-      let user = rows[0]
+      let { Password, ...userPayload } = rows[0] ?? {}
       if (data.id) {
         await pool.query<ResultSetHeader>(
           `
@@ -199,14 +198,15 @@ export default {
           [data.googleId]
         )
 
-        user = rows2[0]
+        const { Password: Password2, ...userPayload2 } = rows2[0]!
+        userPayload = userPayload2
       }
 
-      if (!user) throw new Error('User is not found')
+      if (!userPayload) throw new Error('User is not found')
 
       return {
         message: 'You have successfully attached social id',
-        answer: user,
+        answer: userPayload,
       }
     } catch (err) {
       console.log(err)
@@ -224,7 +224,7 @@ export default {
         [data.githubId]
       )
 
-      let user = rows[0]
+      let { Password, ...userPayload } = rows[0] ?? {}
       if (data.id) {
         await pool.query<ResultSetHeader>(
           `
@@ -239,14 +239,15 @@ export default {
           [data.githubId]
         )
 
-        user = rows2[0]
+        const { Password: Password2, ...userPayload2 } = rows2[0]!
+        userPayload = userPayload2
       }
 
-      if (!user) throw new Error('User has not been found')
+      if (!userPayload) throw new Error('User has not been found')
 
       return {
         message: 'You have successfully attached social id',
-        answer: user,
+        answer: userPayload,
       }
     } catch (err) {
       console.log(err)
@@ -284,9 +285,10 @@ export default {
         }
       })
 
+      const { Password, ...userPayload } = rows2[0]!
       res.status(200).json({
         message: 'You have successfully unattached social id',
-        answer: rows2[0],
+        answer: userPayload,
       })
     } catch (err) {
       console.log(err)
@@ -327,9 +329,10 @@ export default {
         }
       })
 
+      const { Password, ...userPayload } = rows2[0]!
       res.status(200).json({
         message: 'You have successfully unattached social id',
-        answer: rows2[0],
+        answer: userPayload,
       })
     } catch (err) {
       console.log(err)

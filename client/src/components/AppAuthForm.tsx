@@ -67,7 +67,6 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   })
-
   const [inputType, setInputType] = useState('password')
 
   return (
@@ -76,7 +75,7 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-[10px] w-[min(350px,_100%)]"
       >
-        <span className="text-xl font-bold leading-none mb-[10px]">
+        <span className="leading-none text-xl font-bold mb-[10px]">
           {formTitle}
         </span>
         {err && (
@@ -263,7 +262,6 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
     mode: 'onChange',
     resolver: zodResolver(formSchema),
   })
-
   const [inputType, setInputType] = useState('password')
 
   return (
