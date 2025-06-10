@@ -18,7 +18,7 @@ const sendMail = async (to: string[], subject: string, html: string) => {
       clientSecret: process.env.NODEMAILER_GOOGLE_CLIENT_SECRET,
       refreshToken: process.env.NODEMAILER_GOOGLE_REFRESH_TOKEN,
     },
-    tls: { rejectUnauthorized: false }, // only for localhost
+    // tls: { rejectUnauthorized: false }, // only for localhost
   })
 
   return transporter
