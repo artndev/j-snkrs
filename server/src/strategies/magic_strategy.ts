@@ -7,6 +7,7 @@ import MagicLoginStrategy from 'passport-magic-login'
 import config from '../config.json' with { type: 'json' }
 import { usersController } from '../controllers/_controllers.js'
 import mailer from '../mailer.js'
+import config from '../config.json' with { type: 'json' }
 
 export const magicLogin = new MagicLoginStrategy.default({
   secret: process.env.MAGIC_LINK_SECRET!,
@@ -17,8 +18,8 @@ export const magicLogin = new MagicLoginStrategy.default({
     // ${config.SERVER_URL}/api/static/cat.jpg
     await mailer.sendMail(
       [user.email],
-      'Confirrm Yourr Email',
-      `<div style="width: 200px; height: 200px; border-radius: calc(.625rem + 4px); overflow: hidden;"> <img src="https://i.pinimg.com/736x/1f/54/ac/1f54acbbecdfb5b248d42ace992b699b.jpg" style="width: 100%; object-fit: cover;" /> </div> <br /> <a href="${href}"> Prr.. Prrr... Tap here to continue </a>`
+      'Verification Link',
+      `<div style="width: 200px; height: 200px; border-radius: calc(.625rem + 4px); overflow: hidden;"> <img src="${config.SERVER_URL}/api/static/cat.jpg" style="width: 100%; object-fit: cover;" /> </div> <br /> <a href="${href}"> Tap here to verify your email </a>`
     )
   },
   verify: async (payload, done, req) => {
