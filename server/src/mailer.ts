@@ -8,17 +8,14 @@ import config from './config.json' with { type: 'json' }
 
 const sendMail = async (to: string[], subject: string, html: string) => {
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    host: 'smtp.mail.ru',
+    port: 465,
+    secure: true,
     auth: {
-      type: 'OAuth2',
       user: process.env.NODEMAILER_USER,
-      clientId: process.env.NODEMAILER_GOOGLE_CLIENT_ID,
-      clientSecret: process.env.NODEMAILER_GOOGLE_CLIENT_SECRET,
-      refreshToken: process.env.NODEMAILER_GOOGLE_REFRESH_TOKEN,
+      pass: process.env.MAIL_PASSWORD,
     },
-    tls: { rejectUnauthorized: false }, // only for localhost
+    // tls: { rejectUnauthorized: false }, // only for localhost
   })
 
   return transporter
@@ -76,7 +73,14 @@ const sendOTP = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+// ;(async () => {
+//   console.log('SENT', process.env.MAIL_PASSWORD)
+//   await sendMail(['agressorios@gmail.com'], 'Test', 'Test')
+//   console.log('RECEIVED')
+// })()
+
 // ! VPN is breaking everything down
+// https://account.mail.ru/user/2-step-auth/passwords/
 // https://masashi-k.blogspot.com/2013/06/sending-mail-with-gmail-using-xoauth2.html
 export default {
   sendMail,
