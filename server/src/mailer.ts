@@ -13,7 +13,7 @@ const sendMail = async (to: string[], subject: string, html: string) => {
     secure: true,
     auth: {
       user: process.env.NODEMAILER_USER,
-      pass: process.env.MAIL_PASSWORD,
+      pass: process.env.NODEMAILER_PASSWORD,
     },
     // tls: { rejectUnauthorized: false }, // only for localhost
   })
