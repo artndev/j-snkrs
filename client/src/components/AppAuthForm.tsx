@@ -44,21 +44,9 @@ const AppAuthForm: React.FC<IAuthFormProps> = ({
   withSocials,
 }) => {
   const formSchema = z.object({
-    username: z
-      .string()
-      .nonempty()
-      .min(5)
-      .max(20)
-      .regex(regexes.USERNAME_REGEX)
-      .optional(),
+    username: z.string().nonempty().regex(regexes.USERNAME_REGEX).optional(),
     email: z.string().nonempty().email().optional(),
-    password: z
-      .string()
-      .nonempty()
-      .min(5)
-      .max(20)
-      .regex(regexes.PASSWORD_REGEX)
-      .optional(),
+    password: z.string().nonempty().regex(regexes.PASSWORD_REGEX).optional(),
 
     otp: z.string().nonempty().length(6).regex(/^\d+$/).optional(),
   })
@@ -224,8 +212,6 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
     username: z
       .string()
       .nonempty()
-      .min(5)
-      .max(20)
       .regex(regexes.USERNAME_REGEX)
       .refine(val => val !== dirtyValues?.username, {
         message: 'The new username cannot be same as yours',
@@ -240,18 +226,10 @@ export const AppAuthFormDialog: React.FC<IAuthFormDialogProps> = ({
       })
       .optional(),
 
-    password: z
-      .string()
-      .nonempty()
-      .min(5)
-      .max(20)
-      .regex(regexes.PASSWORD_REGEX)
-      .optional(),
+    password: z.string().nonempty().regex(regexes.PASSWORD_REGEX).optional(),
     confirmPassword: z
       .string()
       .nonempty()
-      .min(5)
-      .max(20)
       .regex(regexes.PASSWORD_REGEX)
       .optional(),
 
