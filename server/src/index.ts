@@ -9,14 +9,14 @@ import { RedisStore } from 'connect-redis'
 import cookieParser from 'cookie-parser'
 import express from 'express'
 import session from 'express-session'
+import fs from 'fs'
 import passport from 'passport'
 import { createClient } from 'redis'
 import config from './config.json' with { type: 'json' }
+import './mailer.js'
 import * as middlewares from './middlewares.js'
 import * as routers from './routers/_routers.js'
 import './strategies/_strategies.js'
-import './mailer.js'
-import fs from 'fs'
 
 let redisClient = createClient({ url: process.env.REDIS_URL })
 redisClient.connect().catch(console.error)
@@ -69,7 +69,7 @@ app.use('/api/saves', middlewares.isAuthenticated, routers.savesRouter)
 app.use('/api/local', middlewares.isNotAuthenticated, routers.localRouter)
 app.use('/api/google', routers.googleRouter)
 app.use('/api/github', routers.githubRouter)
-app.use('/api/auth', middlewares.isAuthenticated, routers.userRouter)
+app.use('/api/auth', routers.userRouter)
 
 app.get('/api/static/:id', (req, res) => {
   const filePath = path.join(staticPath, req.params.id)

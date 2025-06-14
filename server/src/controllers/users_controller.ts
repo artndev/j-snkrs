@@ -59,6 +59,38 @@ export default {
       throw new Error('Server is not responding')
     }
   },
+  LoginAdmin: async (req: Request, res: Response) => {
+    try {
+      const [rows] = await pool.query<IUser[]>(
+        'SELECT * FROM Admins WHERE Username = ?;',
+        [req.body.username]
+      )
+
+      if (!rows.length) {
+        res.status(400).json({
+          message: 'Your authorization credentials are invalid',
+          answer: null,
+        })
+        return
+      }
+
+      const { Password, ...userPayload } = rows[0]!
+      const status = await bcrypt.compare(req.body.password, Password!)
+      if (!status) throw new Error('Your authorization credentials are invalid')
+
+      res.status(200).json({
+        message: 'You have successfully authorized',
+        answer: userPayload,
+      })
+    } catch (err) {
+      console.log(err)
+
+      res.status(500).json({
+        message: 'Server is not responding',
+        answer: null,
+      })
+    }
+  },
   UpdateCurrent: async (req: Request, res: Response) => {
     try {
       let { id, otp, confirmOtp, confirmPassword, ...bodyPayload } = req.body

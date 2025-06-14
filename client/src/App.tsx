@@ -3,6 +3,7 @@ import IsNotCartEmpty from './outlets/IsNotCartEmpty'
 import IsNotLogged from './outlets/isNotLogged'
 import Layout from './outlets/Layout'
 import Account from './routes/Account'
+import Admin from './routes/Admin'
 import Cart from './routes/Cart'
 import Fallback from './routes/Fallback'
 import History from './routes/History'
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Product />} />
 
+          <Route path="/admin" element={<Admin />} />
           <Route path="/fallback" element={<Fallback />} />
           <Route path="/*" element={<Navigate to={'/fallback'} />} />
         </Route>
