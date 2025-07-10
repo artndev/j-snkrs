@@ -85,7 +85,7 @@ GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...
 
 # The bot SMTP email credentials to send verification and confirmation emails
-# You can use these services to achieve this:
+# You can use one of these services to achieve this:
 # https://help.mail.ru/enpostmaster/api (totally free but not suitable for the production)
 # https://sendgrid.com
 # https://www.mailgun.com
