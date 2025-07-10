@@ -1,8 +1,10 @@
 ## Quick Overview
 
+_J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN_
+
 The online marketplace that offers you a high variety of sneakers.
 
-> The slogan: J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN.
+> In this version, back-end and front-end work on the same domain without any CORS policy issues. REST API is available at the /api subpath.
 
 ## Tech Stack
 
