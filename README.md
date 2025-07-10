@@ -69,7 +69,7 @@ PORT=8000
 
 # Your Google credentials can be found at:
 # https://console.cloud.google.com
-# Fill in the authorization callback URL field: 
+# Fill in the authorization callback URL field:
 # http://localhost:8000/api/google/callback
 GOOGLE_API_KEY=...
 GOOGLE_CLIENT_ID=...
@@ -77,7 +77,7 @@ GOOGLE_CLIENT_SECRET=...
 
 # Your Github credentials can be found at:
 # https://github.com/settings/developers
-# Fill in the authorization callback URL field: 
+# Fill in the authorization callback URL field:
 # http://localhost:8000/api/github/callback
 GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...
