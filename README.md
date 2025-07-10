@@ -1,8 +1,10 @@
 ## Quick Overview
 
+_J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN_
+
 The online marketplace that offers you a high variety of sneakers.
 
-> The slogan: J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN.
+> In this version, back-end and front-end work on the same domain without any CORS policy issues. REST API is available at the /api subpath.
 
 ## Tech Stack
 
@@ -37,7 +39,7 @@ git checkout dev-public
 
 ## Configure Environmental Variables
 
-Open the _.env_ file located in the client directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the client directory and fill in the required environmental variables:
 
 ```env
 # Your Stripe credentials can be found at:
@@ -47,7 +49,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=...
 VITE_STRIPE_ACCOUNT_ID=...
 ```
 
-Open the _.env_ file located in the server directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the server directory and fill in the required environmental variables:
 
 ```env
 # Your Redis credentials
@@ -69,7 +71,7 @@ PORT=8000
 
 # Your Google credentials can be found at:
 # https://console.cloud.google.com
-# Fill in the authorization callback URL field: 
+# Fill in the authorization callback URL field:
 # http://localhost:8000/api/google/callback
 GOOGLE_API_KEY=...
 GOOGLE_CLIENT_ID=...
@@ -77,7 +79,7 @@ GOOGLE_CLIENT_SECRET=...
 
 # Your Github credentials can be found at:
 # https://github.com/settings/developers
-# Fill in the authorization callback URL field: 
+# Fill in the authorization callback URL field:
 # http://localhost:8000/api/github/callback
 GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...
