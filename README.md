@@ -39,7 +39,7 @@ git checkout dev-public
 
 ## Configure Environmental Variables
 
-Open the _.env.local_ file located in the client directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the _/client_ directory and fill in the required environmental variables:
 
 ```env
 # Your Stripe credentials can be found at:
@@ -49,7 +49,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=...
 VITE_STRIPE_ACCOUNT_ID=...
 ```
 
-Open the _.env.local_ file located in the server directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the _/server_ directory and fill in the required environmental variables:
 
 ```env
 # Your Redis credentials
