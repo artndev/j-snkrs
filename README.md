@@ -60,7 +60,7 @@ REDIS_URL=...
 STRIPE_SECRET=...
 
 # UUIDv4 secrets used for generating sessions, tokens and mails
-# To generate UUIDv4 token, follow link below:
+# To generate UUIDv4 secret, follow link below:
 # https://www.uuidgenerator.net/version4
 SESSION_SECRET=...
 JWT_SECRET=...
@@ -109,7 +109,7 @@ Return to the root directory:
 cd ../
 ```
 
-Run the command below to build and run the application with Node.js:
+Use the command below to build and run the application with Node.js:
 
 ```bash
 npm run start
