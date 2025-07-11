@@ -101,7 +101,7 @@ MYSQL_PASSWORD=...
 MYSQL_DBNAME=...
 ```
 
-## Build & Run Application with Node.js
+## Run Application with Node.js
 
 Return to the root directory:
 
@@ -117,4 +117,4 @@ npm run start
 
 ## Access Application
 
-Once the build is completed successfully, the application will be available at http://localhost:8000.
+Once the application is started successfully, it will be available at http://localhost:8000.
