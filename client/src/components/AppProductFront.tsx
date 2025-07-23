@@ -63,15 +63,8 @@ const AppProductFront: React.FC<IProductFrontProps> = ({
     try {
       axios
         .get(`/api/saves/${id}/state`)
-        .then(res => {
-          setIsSaved(res.data.answer)
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-
-          alert(err.response.data.message)
-        })
+        .then(res => setIsSaved(res.data.answer))
+        .catch(err => console.log(err))
     } catch (err) {
       console.log(err)
 
