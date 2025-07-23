@@ -39,7 +39,7 @@ git checkout dev-public
 
 ## Configure Environmental Variables
 
-Open the _.env.local_ file located in the client directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the _/client_ directory and fill in the required environmental variables:
 
 ```env
 # Your Stripe credentials can be found at:
@@ -49,7 +49,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=...
 VITE_STRIPE_ACCOUNT_ID=...
 ```
 
-Open the _.env.local_ file located in the server directory and fill in the required environmental variables:
+Open the _.env.local_ file located in the _/server_ directory and fill in the required environmental variables:
 
 ```env
 # Your Redis credentials
@@ -60,7 +60,7 @@ REDIS_URL=...
 STRIPE_SECRET=...
 
 # UUIDv4 secrets used for generating sessions, tokens and mails
-# To generate UUIDv4 token, follow link below:
+# To generate UUIDv4 secret, follow link below:
 # https://www.uuidgenerator.net/version4
 SESSION_SECRET=...
 JWT_SECRET=...
@@ -101,7 +101,7 @@ MYSQL_PASSWORD=...
 MYSQL_DBNAME=...
 ```
 
-## Build & Run Application with Node.js
+## Run Application with Node.js
 
 Return to the root directory:
 
@@ -109,7 +109,7 @@ Return to the root directory:
 cd ../
 ```
 
-Run the command below to build and run the application with Node.js:
+Use the command below to build and run the application with Node.js:
 
 ```bash
 npm run start
@@ -117,4 +117,4 @@ npm run start
 
 ## Access Application
 
-Once the build is completed successfully, the application will be available at http://localhost:8000.
+Once the application is started successfully, it will be available at http://localhost:8000.
