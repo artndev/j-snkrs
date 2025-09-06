@@ -4,7 +4,7 @@ _J-SNKRS — yours way into sneakers! Nike SNKRS from JAPAN_
 
 The online marketplace that offers you a high variety of sneakers.
 
-> In this version, back-end and front-end work on the same domain without any CORS policy issues. REST API is available at the /api subpath.
+- In this version, back-end and front-end work on the same domain without any CORS policy issues. REST API is available at the /api subpath.
 
 ## Tech Stack
 
@@ -52,6 +52,9 @@ VITE_STRIPE_ACCOUNT_ID=...
 Open the _.env.local_ file located in the _/server_ directory and fill in the required environmental variables:
 
 ```env
+# Table schemas can be found in server\src\schemas folder
+# They are needed to create the same environment as mine
+
 # Your Redis credentials
 REDIS_URL=...
 
@@ -59,14 +62,11 @@ REDIS_URL=...
 # https://dashboard.stripe.com/test/dashboard
 STRIPE_SECRET=...
 
-# UUIDv4 secrets used for generating sessions, tokens and mails
-# To generate UUIDv4 secret, follow link below:
-# https://www.uuidgenerator.net/version4
+# UUIDv4 secrets used for access to secured destinations
 SESSION_SECRET=...
 JWT_SECRET=...
 MAGIC_LINK_SECRET=...
 
-# Port remains untouchable
 PORT=8000
 
 # Your Google credentials can be found at:
@@ -85,21 +85,23 @@ GITHUB_CLIENT_ID=...
 GITHUB_CLIENT_SECRET=...
 
 # The bot SMTP email credentials to send verification and confirmation emails
-# You can use one of these services to achieve this:
-# https://help.mail.ru/enpostmaster/api (totally free but not suitable for the production)
-# https://sendgrid.com
-# https://www.mailgun.com
 NODEMAILER_USER=...
 NODEMAILER_PASSWORD=...
 
 # Your DB credentials
-# Table schemas can be found in server\src\schemas
 MYSQL_HOST=...
 MYSQL_PORT=...
 MYSQL_USER=...
 MYSQL_PASSWORD=...
 MYSQL_DBNAME=...
 ```
+
+## Useful Links
+
+- [UUIDv4 generator](https://www.uuidgenerator.net/version4)
+- [Postmaster](https://help.mail.ru/enpostmaster/api) (totally free but not suitable for the production)
+- [Sendgrid](https://sendgrid.com)
+- [Mailgun](https://www.mailgun.com)
 
 ## Run Application with Node.js
 
